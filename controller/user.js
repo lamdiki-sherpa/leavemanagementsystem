@@ -18,12 +18,17 @@ const getEmployee=async(req,res)=>{
 }
 const createEmployee=async(req,res)=>{
     // req.body.createdBy=req.user.userId
-    const employee= await User.create(req.body)
+    const employee =await User.create({
+        name:req.body.name,
+        email:req.body.email,
+        password:req.body.password,
+        profile:req.file.filename
+    })
     res.status(StatusCodes.CREATED).json({employee})
 }
 const updateEmployee=async(req,res)=>{
-    const {body:{name,email,roles},params:{id:employeeId}}=req
-    if(name==="" || email==="" || roles==""){
+    const {body:{salary},params:{id:employeeId}}=req
+    if(salary===""){
         throw new BadRequestError('Field cannot be empty ')
     }
     const employee= await User.findByIdAndUpdate({_id:employeeId},req.body,{new:true,runValidators:true})

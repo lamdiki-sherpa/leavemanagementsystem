@@ -1,14 +1,12 @@
 const mongoose= require('mongoose')
 
 const LeaveSchema =new mongoose.Schema({
-    // LeaveType: {
-    //     type: mongoose.Types.ObjectId,
-    //     ref: "LeaveType",
-    //     required: true,
-    //   },
     LeaveType:{
-
         type:String,
+        // type:mongoose.Types.ObjectId,
+        // ref:'LeaveType',
+        //  enum:["Sick","Maternity","Paternity","Bereavement","Annual","Religious","Unpaid","Compensatory"],
+        //  default:"",
          required:true,
     },
       LeaveDetails: {
@@ -40,7 +38,7 @@ const LeaveSchema =new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:'User',
         required:[true,'please provide user']
-    }
+    },
 },{timestamps:true})
 
 module.exports = mongoose.model('Job',LeaveSchema)

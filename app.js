@@ -11,6 +11,7 @@ const app=express()
 // app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
+app.use(express.static('uploads'))
 app.use(helmet())
 app.use(xss())
 const {authenticateUser,CheckAdminAuth}= require('./middleware/authentication')
@@ -34,10 +35,6 @@ app.use(rateLimiter({
 	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 }))
 
-
-
-
-// app.use(express.urlencoded({extended:false}))
 
 //routes
 app.use('/api/v1/auth',authRouter)
