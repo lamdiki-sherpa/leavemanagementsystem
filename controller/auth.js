@@ -49,10 +49,17 @@ if(!passwordMatch){
     throw new UnauthenticatedError('Password is incorrect')
 }
 const token =user.createJWT()
+res.cookie('t',token , {expire:new Date() + 9999}) 
 // res.status(StatusCodes.OK).json({user,token})
 res.status(StatusCodes.OK).json({msg:"Login Successfull",user:{name:user.name,roles:user.roles},token})
 }
  
+const signOut=(req,res)=>{
+    res.clearCookie('t')
+    res.json({
+        message:"Signout successfully "
+    })
 
+ }
 
-module.exports={register,login}
+module.exports={register,login,signOut}

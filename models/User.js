@@ -46,7 +46,15 @@ roles: {
   },
 profile:{
   type:String
-}
+},
+salary:{
+  type:Number,
+  default:0
+},
+// leave:{ 
+//   type: mongoose.Types.ObjectId, 
+//   ref: 'Job'
+//  }
 })
 
 UserSchema.pre('save',async function(next){

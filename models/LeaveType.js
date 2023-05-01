@@ -5,7 +5,6 @@ const LeaveTypeSchema = new mongoose.Schema(
         LeaveTypeName: {
           type: String,
           required: true,
-          unique: true,
         },
         LeaveTypeDetails: {
           type: String,
