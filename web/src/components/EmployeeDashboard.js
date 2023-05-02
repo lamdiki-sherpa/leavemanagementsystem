@@ -21,6 +21,19 @@ const EmployeeDashboard = () => {
   //   }
   // }, []);
 
+  // useEffect(() => {
+  //   var header = document.getElementsByClassName("sidebar");
+  //   console.log(header, "header");
+  //   var btns = header.getElementsByClassName("side-nav__item");
+  //   for (var i = 0; i < btns.length; i++) {
+  //     btns[i].addEventListener("click", function () {
+  //       var current = document.getElementsByClassName("active");
+  //       current[0].className = current[0].className.replace(" active", "");
+  //       this.className += " active";
+  //     });
+  //   }
+  // }, []);
+
   async function fetchUserData() {
     try {
       const { data } = await Axios.post("/api/v1/auth/login", inputField);
