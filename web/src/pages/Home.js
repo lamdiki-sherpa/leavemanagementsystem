@@ -1,9 +1,10 @@
-import React ,{useState}from 'react'
+import React ,{useState,useEffect}from 'react'
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 import '../App.css'; 
 const Home = () => {
+  const navigate=useNavigate()
   const [inputField,setInputField]=useState({
     LeaveType:'',
     StartLeaveDate:'',
@@ -13,11 +14,19 @@ const Home = () => {
     LeaveDetails:''
     
   })
+  const [token,setToken]=useState('')
   const [leave,setLeave]=useState([])
   const [errors,setErrors]=useState('')
   const inputHandler=(e)=>{
     setInputField({...inputField,[e.target.name]:e.target.value})
-  }
+  } 
+  useEffect(()=>{
+    const jwt=JSON.parse(localStorage.getItem('jwt'))
+    const tokens=jwt.token
+    console.log(tokens)
+    setToken(tokens)
+  },setToken)
+ 
   const submitHandler=async(e)=>{
     e.preventDefault();
     const jwt= JSON.parse(localStorage.getItem('jwt'))
@@ -89,10 +98,26 @@ console.log(error.response)
 
 }
   }
+  const logoutHandler=async()=>{
+    const jwt= JSON.parse(localStorage.getItem('jwt'))
+    const config = {
+      headers: { Authorization: `Bearer ${jwt.token}` }
+    };
+    try {
+      const { data } = await axios.get('/api/v1/auth/signout',config);
+      const response=JSON.stringify(data);
+      console.log(response)
+      navigate('/login')
+    } catch (error) {
+      console.log(error.response)
+    }
+  }
   return (
   <section>
     <h3>Employee page</h3>
     <p style={{marginTop:'-10px',letterSpacing:'6px'}}>Good morning employee</p>
+    <button className='btn btn-primary' onClick={logoutHandler}>Logout</button><br/>
+    {token?<button className='btn btn-success'>active</button>:<button className='btn btn-danger'>deactive</button>}
     <div className='col-6 text-start mx-4'>
      {errors && <div>{errors}</div>}   
     <form  onSubmit={submitHandler}>Leave Form

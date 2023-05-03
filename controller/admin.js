@@ -1,15 +1,16 @@
 const Job=require('../models/leave')
 const {StatusCodes}=require('http-status-codes')
 const getAllLeaveByAdmin=async(req,res)=>{
-    const leaves= await Job.find().populate('createdBy')
+    const leaves= await Job.find().populate('createdBy').sort('leavePriority')
     res.status(StatusCodes.OK).json({leaves,count:leaves.length})
 }
+
 const getSingleLeaveByAdmin=async(req,res)=>{
     console.log(req.params.id)
     const {params:{id:leaveId}}=req
     const leave = await Job.findOne({
         _id:leaveId
-    })
+    }).populate('createdBy')
     if(!leave){
         throw new NotFoundError(`No  leave with id ${leaveId}`)
     }

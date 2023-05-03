@@ -3,10 +3,6 @@ const mongoose= require('mongoose')
 const LeaveSchema =new mongoose.Schema({
     LeaveType:{
         type:String,
-        // type:mongoose.Types.ObjectId,
-        // ref:'LeaveType',
-        //  enum:["Sick","Maternity","Paternity","Bereavement","Annual","Religious","Unpaid","Compensatory"],
-        //  default:"",
          required:true,
     },
       LeaveDetails: {
@@ -21,10 +17,6 @@ const LeaveSchema =new mongoose.Schema({
         type: Date,
         required: true,
       },
-    //   NumOfDay: {
-    //     type: Number,
-    //     required: true,
-    //   },
       AdminRemark: {
         type: String,
         default: "",
@@ -39,6 +31,11 @@ const LeaveSchema =new mongoose.Schema({
         ref:'User',
         required:[true,'please provide user']
     },
+    leavePriority:{
+     type:Number,
+     default:0
+    }
+   
 },{timestamps:true})
 
 module.exports = mongoose.model('Job',LeaveSchema)

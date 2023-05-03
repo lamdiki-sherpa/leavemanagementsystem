@@ -19,6 +19,35 @@ const getLeave=async(req,res)=>{
 }
 const createLeave=async(req,res)=>{
     req.body.createdBy=req.user.userId
+    const leaveType=req.body.LeaveType
+    // console.log(req.body.LeaveType)
+    if(leaveType==="Sick"){
+        req.body.leavePriority=4
+    }
+    else if(leaveType==="Bereavement"){
+    req.body.leavePriority=1
+    }
+    else if(leaveType==="Maternity"){
+    req.body.leavePriority=2
+        }
+    else if(leaveType==="Paternity"){
+    req.body.leavePriority=3
+            }
+    else if(leaveType==="Annual"){
+     req.body.leavePriority=5
+    }
+    else if(leaveType==="Religious"){
+        req.body.leavePriority=6
+       }
+    else if(leaveType==="Unpaid"){
+        req.body.leavePriority=7
+       }
+     else if(leaveType==="Compensatory"){
+        req.body.leavePriority=8
+       }
+       else{
+        req.body.leavePriority=9
+       }
     const leave = await Job.create(req.body)
     res.status(StatusCodes.CREATED).json({leave})
 }

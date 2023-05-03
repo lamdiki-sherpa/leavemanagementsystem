@@ -1,7 +1,7 @@
 const express=require('express')
 const router= express.Router()
 const multer=require('multer')
-const {getAllEmployee,getEmployee,createEmployee,deleteEmployee,updateEmployee}=require('../controller/user')
+const {getAllEmployee,getEmployee,createEmployee,deleteEmployee,updateEmployee,getleavebySingleUserByAdmin}=require('../controller/user')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null,'./uploads')
@@ -17,5 +17,5 @@ const upload = multer({ storage: storage })
 router.route('/').get(getAllEmployee)
 router.post('/',upload.single('myPhoto'),createEmployee)
 router.route('/:id').get(getEmployee).delete(deleteEmployee).patch(updateEmployee)
-
+router.route('/leaves/:userId').get(getleavebySingleUserByAdmin)
 module.exports=router

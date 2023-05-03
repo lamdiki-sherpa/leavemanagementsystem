@@ -17,6 +17,7 @@ const Dashboard = ({user}) => {
   const [leave,setLeave]=useState([])
   const [employee,setEmployee]=useState([])
   const [error,setError]=useState('')
+  const [leaverecord,setLeaverecord]=useState([])
   const [department,setDepartment]=useState([])
   const inputHandler=(e)=>{
     setInputField({...inputField,[e.target.name]:e.target.value})
@@ -109,6 +110,23 @@ const Dashboard = ({user}) => {
       }
 
     }
+    //=======================================ADMIN VIEW SINGLE EMPLOYEE RECORDS===================================
+    const leavebysingleemployeeHandler=async(id)=>{
+      const jwt= JSON.parse(localStorage.getItem('jwt'))
+      const config = {
+        headers: { Authorization: `Bearer ${jwt.token}` }
+      };
+      try {
+        const { data } = await Axios.get(`/api/v1/employee/leaves/${id}`,config);
+        const response=JSON.stringify(data);
+        const leavebysingleemployee= JSON.parse(response)
+        console.log(leavebysingleemployee)
+        setLeaverecord(leavebysingleemployee.leaves)
+      } catch (error) {
+        console.log(error.response)
+
+      }
+    }
   // ======================================= ADMIN VIEW LEAVE ======================================================
     const viewHandler=async()=>{
       const jwt= JSON.parse(localStorage.getItem('jwt'))
@@ -120,6 +138,7 @@ const Dashboard = ({user}) => {
         const response=JSON.stringify(data);
         const leave= JSON.parse(response)
         setLeave(leave.leaves)
+        console.log(leave.leaves)
     } catch (error) {
     if(error.response.statusText==="Unauthorized"){
       setError(error.response.data.msg)
@@ -235,7 +254,7 @@ const Dashboard = ({user}) => {
         <table className='table'>
         <thead>
             <tr>
-    <th scope='col'>ID</th>
+    {/* <th scope='col'>ID</th> */}
     <th scope='col'>Name</th>
     <th scope='col'>Email</th>
   {/* ///===========================Department add garna banki xa ============================================ */}
@@ -250,7 +269,7 @@ const Dashboard = ({user}) => {
           return <div>
           {roles==="STAFF" && <tbody>
             <tr key={_id}>
-            <td>{_id}</td>
+            {/* <td>{_id}</td> */}
             <td><h3>{name}</h3>
             {profile?<img src={profile} style={{height:'80px',width:'80px'}}/>:<img style={{height:'80px',width:'80px'}}/>} 
             </td>
@@ -259,6 +278,8 @@ const Dashboard = ({user}) => {
             <td>
             <button className='btn btn-primary'>Update</button>
             <button className='btn btn-danger'>Delete</button>
+            <button  onClick={()=>leavebysingleemployeeHandler(_id)} className='btn btn-secondary'>Employee Leave record</button>
+           
             </td>
             </tr>
           
@@ -268,8 +289,18 @@ const Dashboard = ({user}) => {
           </div>
           })}
         </table>
-       
-       
+        <div>
+          {leaverecord && leaverecord.map((leave)=>{
+            const {AdminStatus,LeaveType,
+
+            }=leave
+            return <div>
+              <h4>{LeaveType}</h4>
+              <h4>{AdminStatus}</h4>
+            </div>
+          })}
+        </div>
+     
       </div><br/>
       ================================== LEAVE===========================================
     =========================================================================================
@@ -291,7 +322,7 @@ const Dashboard = ({user}) => {
           const {_id,LeaveType,StartLeaveDate,EndLeaveDate,AdminStatus,AdminRemark,
           }=leave
           const {createdBy:{name,profile}}=leave
-          console.log(profile)
+          // console.log(profile)
           return <tbody>
 
   <tr key={_id}>
