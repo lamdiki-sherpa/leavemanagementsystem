@@ -2,37 +2,11 @@ import React, { useEffect, useContext, useState } from "react";
 import Sidebar from "./Sidebar";
 import { LeaveContext } from "../contextApi/LeaveContext";
 import Axios from "axios";
+import TopBar from "./TopBar";
 
 const EmployeeDashboard = () => {
   const { inputField, setInputField, employeeName, setEmployeeName } =
     useContext(LeaveContext);
-
-  // useEffect(() => {
-  //   try {
-  // const { data } = Axios.post("/api/v1/auth/login", inputField);
-  // const response = JSON.stringify(data);
-  // // const user = JSON.parse(response);
-
-  // console.log(response);
-
-  // // userName = user.user.name;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   var header = document.getElementsByClassName("sidebar");
-  //   console.log(header, "header");
-  //   var btns = header.getElementsByClassName("side-nav__item");
-  //   for (var i = 0; i < btns.length; i++) {
-  //     btns[i].addEventListener("click", function () {
-  //       var current = document.getElementsByClassName("active");
-  //       current[0].className = current[0].className.replace(" active", "");
-  //       this.className += " active";
-  //     });
-  //   }
-  // }, []);
 
   async function fetchUserData() {
     try {
@@ -52,209 +26,16 @@ const EmployeeDashboard = () => {
   }, []);
 
   return (
-    //     <section>
-    //   <h3>Employee page</h3>
-    //   <p style={{ marginTop: "-10px", letterSpacing: "6px" }}>
-    //     Good morning employee
-    //   </p>
-    //   <div className="col-6 text-start mx-4">
-    //     {errors && <div>{errors}</div>}
-    //     <form onSubmit={submitHandler}>
-    //       Leave Form
-    //       <div className="form-group mb-3">
-    //         <label className="form-label">Start date:</label>
-    //         <input
-    //           type="date"
-    //           name="StartLeaveDate"
-    //           className="form-control my-2"
-    //           value={inputField.StartLeaveDate}
-    //           onChange={inputHandler}
-    //           required
-    //         />
-    //       </div>
-    //       <div className="form-group mb-3">
-    //         <label className="from-label">End date:</label>
-    //         <input
-    //           type="date"
-    //           name="EndLeaveDate"
-    //           className=" form-control my-2"
-    //           value={inputField.EndLeaveDate}
-    //           onChange={inputHandler}
-    //           required
-    //         />
-    //       </div>
-    //       <div className="form-group mb-3">
-    //         <label className="from-label">Leave type:</label>
-    //         <select
-    //           name="LeaveType"
-    //           value={inputField.LeaveType}
-    //           onChange={inputHandler}
-    //         >
-    //           <option value="Sick">Sick</option>
-    //           <option value="Paternity">paternity</option>
-    //           <option value="Paid leave">Paid leave</option>
-    //           <option value="Bereavement">Bereavement</option>
-    //         </select>
-    //       </div>
-    //       <div className="form-group mb-3">
-    //         <label className="from-label">Why leave?</label>
-    //         <textarea
-    //           rows="4"
-    //           cols="80"
-    //           name="LeaveDetails"
-    //           value={inputField.LeaveDetails}
-    //           onChange={inputHandler}
-    //         />
-    //       </div>
-    //       <div>Hello hi</div>
-    //       <button type="submit" className="btn btn-primary button my-3">
-    //         Submit
-    //       </button>
-    //     </form>
-    //   </div>
-    //   <button type="button" onClick={viewHandler}>
-    //     View leave created
-    //   </button>
-    //   {leave && (
-    //     <div>
-    //       {leave.map((leave) => {
-    //         const {
-    //           _id: leaveId,
-    //           LeaveType,
-    //           EndLeaveDate,
-    //           AdminRemark,
-    //           AdminStatus,
-    //           createdBy,
-    //           StartLeaveDate,
-    //           createdAt,
-    //           updatedAt,
-    //         } = leave;
-    //         return (
-    //           <div key={leaveId}>
-    //             <h3>{LeaveType}</h3>
-    //             <h3>{StartLeaveDate}</h3>
-    //             <h3>{EndLeaveDate}</h3>
-    //             <h3>{AdminRemark}</h3>
-    //             <h3>{AdminStatus}</h3>
-    //             <button onClick={() => deleteHandler(leaveId)}>
-    //               Delete leave
-    //             </button>
-    //             <button onClick={updateHandler}>Update leave</button>
-    //           </div>
-    //         );
-    //       })}
-    //     </div>
-    //   )}
-    // </section>
     <div className="container">
       <Sidebar />
       <main class="main-content">
-        <div class="top-container">
-          <div action="#" class="search">
-            <svg
-              class="search__icon"
-              width="22"
-              height="22"
-              viewBox="0 0 22 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10.5418 19.25C15.3513 19.25 19.2502 15.3512 19.2502 10.5417C19.2502 5.73223 15.3513 1.83337 10.5418 1.83337C5.73235 1.83337 1.8335 5.73223 1.8335 10.5417C1.8335 15.3512 5.73235 19.25 10.5418 19.25Z"
-                stroke="#596780"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M20.1668 20.1667L18.3335 18.3334"
-                stroke="#596780"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <input
-              type="text"
-              class="search__input"
-              placeholder="Search something here"
-            />
-          </div>
-          <div class="user-nav">
-            <button class="notification">
-              <svg
-                class="notification__icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.0201 2.91003C8.71009 2.91003 6.02009 5.60003 6.02009 8.91003V11.8C6.02009 12.41 5.76009 13.34 5.45009 13.86L4.30009 15.77C3.59009 16.95 4.08009 18.26 5.38009 18.7C9.69009 20.14 14.3401 20.14 18.6501 18.7C19.8601 18.3 20.3901 16.87 19.7301 15.77L18.5801 13.86C18.2801 13.34 18.0201 12.41 18.0201 11.8V8.91003C18.0201 5.61003 15.3201 2.91003 12.0201 2.91003Z"
-                  stroke="#292D32"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M13.8699 3.19994C13.5599 3.10994 13.2399 3.03994 12.9099 2.99994C11.9499 2.87994 11.0299 2.94994 10.1699 3.19994C10.4599 2.45994 11.1799 1.93994 12.0199 1.93994C12.8599 1.93994 13.5799 2.45994 13.8699 3.19994Z"
-                  stroke="#292D32"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M15.02 19.0601C15.02 20.7101 13.67 22.0601 12.02 22.0601C11.2 22.0601 10.44 21.7201 9.90002 21.1801C9.36002 20.6401 9.02002 19.8801 9.02002 19.0601"
-                  stroke="#292D32"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                />
-              </svg>
-            </button>
-            <div class="user-info">
-              <svg
-                class="user-image"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="24" height="24" fill="white" fill-opacity="0.01" />
-                <path
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-                  d="M1 12C1 18.0751 5.92487 23 12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM12.0321 19C8.67459 19 6.80643 17.2316 6.80643 14V13H17.1158L17.1434 13.9715C17.2358 17.2145 15.4003 19 12.0321 19ZM15.0875 15C14.8526 16.3955 13.9089 17 12.0321 17C10.1563 17 9.18179 16.3902 8.89677 15H15.0875ZM14 8H17V10H14V8ZM10 8H7V10H10V8Z"
-                  fill="black"
-                />
-              </svg>
-              <span class="user-name">{employeeName}</span>
-            </div>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16.5999 7.45837L11.1666 12.8917C10.5249 13.5334 9.4749 13.5334 8.83324 12.8917L3.3999 7.45837"
-                stroke="#596780"
-                stroke-width="1.5"
-                stroke-miterlimit="10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
+        <TopBar />
         <div class="bottom-container">
           <div class="bottom-container__left">
             <div class="box spending-box">
               <div class="header-container">
-                <h3 class="section-header">Spending Statistics</h3>
+                <h3 class="section-header">Toptracker Statistics</h3>
+
                 <div class="year-selector">
                   <svg
                     width="24"
@@ -305,86 +86,16 @@ const EmployeeDashboard = () => {
                   </svg>
                 </div>
               </div>
-              <div class="bar-chart">
-                <canvas id="myChart" height="220px" width="660px"></canvas>
+              <div class="bar-chart d-flex justify-content-center align-items-center">
+                <h4>Track working time with Top Tracker</h4>
+                <a href="https://tracker.toptal.com/app/projects?tab=active&sort-by=project-name&sort-order=asc">
+                  <button className="btn-success m-2">Download</button>
+                </a>
               </div>
             </div>
             <div class="box total-box">
-              <div class="total-box__left">
-                <div class="header-container">
-                  <h3 class="section-header">Total Income</h3>
-                  <svg
-                    class="up-arrow"
-                    width="42"
-                    height="42"
-                    viewBox="0 0 42 42"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect width="42" height="42" rx="8" fill="#F6F7F9" />
-                    <path
-                      d="M27.0702 18.57L21.0002 12.5L14.9302 18.57"
-                      stroke="#7FB519"
-                      stroke-width="2"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M21 29.5V12.67"
-                      stroke="#7FB519"
-                      stroke-width="2"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-                <h1 class="price">
-                  $50,530.00<span class="price-currency">(USD)</span>
-                </h1>
-                <p>
-                  <span class="percentage-increase">20%</span> increase compared
-                  to last week
-                </p>
-              </div>
-              <div class="total-box__right">
-                <div class="header-container">
-                  <h3 class="section-header">Total Expense</h3>
-                  <svg
-                    width="42"
-                    height="42"
-                    viewBox="0 0 42 42"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect width="42" height="42" rx="8" fill="#F6F7F9" />
-                    <path
-                      d="M27.0702 23.43L21.0002 29.5L14.9302 23.43"
-                      stroke="#FF4423"
-                      stroke-width="2"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M21 12.5V29.33"
-                      stroke="#FF4423"
-                      stroke-width="2"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-                <h1 class="price">
-                  $50,530.00<span class="price-currency">(USD)</span>
-                </h1>
-                <p>
-                  <span class="percentage-decrease">10%</span> decrease compared
-                  to last week
-                </p>
-              </div>
+              <div class="total-box__left"></div>
+              <div class="total-box__right"></div>
             </div>
             <div class="box transaction-box">
               <div class="header-container">

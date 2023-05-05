@@ -15,11 +15,9 @@ const LeaveTypeSchema = new mongoose.Schema(
         LeavePriority:{
           type:Number,
           default:0
-        }
-        // LeaveTypeStatus: {
-        //   type: Boolean,
-        //   required: true,
-        // },
+        },
+        
+      
       },
   );
 

@@ -32,7 +32,7 @@ const Signin = () => {
       console.log(response);
       console.log(value);
       alert("Registration successful");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       if (error.response.statusText === "Bad Request") {
         setError(error.response.data.msg);
@@ -179,7 +179,7 @@ const Signin = () => {
               required
             />
           </div>
-          <div class="col-sm-6 form-group">
+          {/* <div class="col-sm-6 form-group">
             <label for="Country">Country</label>
             <select class="form-control custom-select browser-default">
               <option value="Afghanistan">Afghanistan</option>
@@ -483,7 +483,7 @@ const Signin = () => {
               <option value="Zambia">Zambia</option>
               <option value="Zimbabwe">Zimbabwe</option>
             </select>
-          </div>
+          </div> */}
           <div class="col-sm-6 form-group">
             <label for="Date">Date Of Birth</label>
             <input
@@ -503,7 +503,7 @@ const Signin = () => {
               <option value="unspesified">Unspecified</option>
             </select>
           </div>
-          <div class="col-sm-2 form-group">
+          {/* <div class="col-sm-2 form-group">
             <label for="cod">Country code</label>
             <select class="form-control browser-default custom-select">
               <option data-countryCode="US" value="1" selected>
@@ -1151,7 +1151,7 @@ const Signin = () => {
                 Zimbabwe (+263)
               </option>
             </select>
-          </div>
+          </div> */}
           <div class="col-sm-4 form-group">
             <label for="tel">Phone</label>
             <input
@@ -1162,17 +1162,6 @@ const Signin = () => {
               placeholder="Enter Your Contact Number."
               required
             />
-          </div>
-          <div class="col-sm-12">
-            <input
-              type="checkbox"
-              class="form-check d-inline"
-              id="chb"
-              required
-            />
-            <label for="chb" class="form-check-label">
-              &nbsp;I accept all terms and conditions.
-            </label>
           </div>
 
           <div class="col-sm-12 form-group mb-0 d-flex justify-content-center items-items-center p-4">

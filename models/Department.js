@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const DepartmentSchema =new mongoose.Schema(
+const DepartmentSchema = new mongoose.Schema(
   {
     DepartmentName: {
       type: String,
@@ -20,7 +20,7 @@ const DepartmentSchema =new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true, versionKey: false },
+  { timestamps: true, versionKey: false }
 );
 
-module.exports = mongoose.model('Department',DepartmentSchema)
+module.exports = mongoose.model("Department", DepartmentSchema);

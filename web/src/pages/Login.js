@@ -5,7 +5,14 @@ import { LeaveContext } from "../contextApi/LeaveContext";
 import "../css/login.css";
 import Axios from "axios";
 const Login = ({ setUser }) => {
-  const { inputField, setInputField } = useContext(LeaveContext);
+  const {
+    inputField,
+    setInputField,
+    adminLoggedIn,
+    setAdminLoggedIn,
+    userLoggedIn,
+    setuserLoggedIn,
+  } = useContext(LeaveContext);
   const navigate = useNavigate();
   const [errors, setError] = useState("");
 
@@ -26,8 +33,10 @@ const Login = ({ setUser }) => {
         JSON.stringify({ login: true, token: user.token })
       );
       if (user.user.roles === "ADMIN") {
+        setuserLoggedIn(true);
         navigate("/admindashboard");
       } else {
+        setAdminLoggedIn(true);
         navigate("/employeedashboard");
       }
     } catch (error) {
@@ -40,47 +49,11 @@ const Login = ({ setUser }) => {
 
   return (
     <>
-      {/* <div className="col-6 text-start mx-4">
-        {errors && <div>{errors}</div>}
-        <form onSubmit={submitHandler}>
-          Login
-          <div className="form-group mb-3">
-            <label className="form-label">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control my-2"
-              value={inputField.email}
-              onChange={inputHandler}
-              required
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label className="from-label">Password</label>
-            <input
-              type="password"
-              name="password"
-              className=" form-control my-2"
-              value={inputField.password}
-              onChange={inputHandler}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary button my-3">
-            Login In
-          </button>
-          <div className=" mb-3">
-            New user? <Link to="/register">create your account</Link>
-            {/* <Link to={`/signup?redirect=${redirect}`}>Create your account</Link> */}
-      {/* </div>
-        </form>
-      </div>  */}
-
       <div>
         <div class="app">
           <div class="bg"></div>
           <div>{errors && <div>{errors}</div>}</div>
-          <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler} className="position-absolute">
             <header>
               <img src="https://42f2671d685f51e10fc6-b9fcecea3e50b3b59bdc28dead054ebc.ssl.cf5.rackcdn.com/illustrations/reading_0re1.svg" />
             </header>
@@ -90,6 +63,7 @@ const Login = ({ setUser }) => {
                 type="email"
                 name="email"
                 placeholder="username or email"
+                className="border-0 text-white"
                 value={inputField.email}
                 onChange={inputHandler}
                 required
@@ -98,7 +72,7 @@ const Login = ({ setUser }) => {
               <input
                 type="password"
                 name="password"
-                className=" form-control my-2"
+                className="form-control my-2 border-0"
                 value={inputField.password}
                 onChange={inputHandler}
                 required

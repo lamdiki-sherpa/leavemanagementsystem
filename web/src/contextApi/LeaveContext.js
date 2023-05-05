@@ -7,12 +7,26 @@ const LeaveContextProvider = ({ children }) => {
     email: "",
     password: "",
   });
+  const [adminLoggedIn, setAdminLoggedIn] = useState(false);
+  const [userLoggedIn, setuserLoggedIn] = useState(false);
 
   const [employeeName, setEmployeeName] = useState("");
+  const [leave, setLeave] = useState([]);
 
   return (
     <LeaveContext.Provider
-      value={{ inputField, setInputField, employeeName, setEmployeeName }}
+      value={{
+        inputField,
+        setInputField,
+        employeeName,
+        setEmployeeName,
+        leave,
+        setLeave,
+        adminLoggedIn,
+        setAdminLoggedIn,
+        userLoggedIn,
+        setuserLoggedIn,
+      }}
     >
       {children}
     </LeaveContext.Provider>
