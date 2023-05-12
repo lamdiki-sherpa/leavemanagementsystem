@@ -1,7 +1,7 @@
 require('dotenv').config()
 require('express-async-errors')
+const cron=require('node-cron')
 //extra security packages
-const cors=require('cors')
 const helmet=require('helmet')
 const xss=require('xss-clean')
 const rateLimiter=require('express-rate-limit')
@@ -15,6 +15,7 @@ app.use(express.static('uploads'))
 app.use(helmet())
 app.use(xss())
 const {authenticateUser,CheckAdminAuth}= require('./middleware/authentication')
+ 
 //connectDB
 const connectDB= require('./db/connect')
 //routers
@@ -55,6 +56,15 @@ const start=async()=>{
         app.listen(port,()=>{
             console.log(`server is listening on port:${port}`)
         })
+    //     cron.schedule('*/2 * * * *', async () => {
+    //     console.log('checking pending request')
+    //     await autoRejectLeaveRequests();
+        
+    // })
+        cron.schedule('0 12 */2 * *', async () => {
+            await autoRejectLeaveRequests();
+      });
+
     } catch (error) {
        console.log(error) 
     }
@@ -62,3 +72,7 @@ const start=async()=>{
 }
 
 start()
+
+  
+
+  

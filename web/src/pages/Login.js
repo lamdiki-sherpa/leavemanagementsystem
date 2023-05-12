@@ -21,9 +21,8 @@ const Login = ({setUser}) => {
                 const { data } = await Axios.post('/api/v1/auth/login',inputField);
                 const response=JSON.stringify(data);
                 const user= JSON.parse(response)
-                
                 console.log(user.user.name)
-                console.log(user.token)
+              
                 localStorage.setItem('jwt',JSON.stringify({login:true,token:user.token}))
                 if(user.user.roles==="ADMIN"){
                    navigate('/admindashboard')

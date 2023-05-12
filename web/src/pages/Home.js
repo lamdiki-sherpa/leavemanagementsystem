@@ -1,24 +1,28 @@
 import React ,{useState,useEffect}from 'react'
 import axios from 'axios';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import '../App.css'; 
 const Home = () => {
   const navigate=useNavigate()
   const [inputField,setInputField]=useState({
     LeaveType:'',
+    priority: 'Low' ,
     StartLeaveDate:'',
     EndLeaveDate:'',
     AdminRemark:'',
     // AdminStatus:'pending',
-    LeaveDetails:''
+    LeaveDetails:'',
+
     
   })
   const [token,setToken]=useState('')
   const [leave,setLeave]=useState([])
   const [errors,setErrors]=useState('')
+  const [status,setStatus]=useState(false)
   const inputHandler=(e)=>{
     setInputField({...inputField,[e.target.name]:e.target.value})
+   
   } 
   useEffect(()=>{
     const jwt=JSON.parse(localStorage.getItem('jwt'))
@@ -38,9 +42,16 @@ const Home = () => {
       const response=JSON.stringify(data);
       const leave= JSON.parse(response)
       console.log(leave);
-                
       
-    } catch (error) {
+      // const start=new Date(leave.leave.StartLeaveDate).getTime() 
+      // const end=new Date(leave.leave.EndLeaveDate).getTime() 
+      // const diffInMs=end-start
+      // const diffInDay=Math.floor(diffInMs/(1000 * 60 * 60 * 24))
+      // console.log(diffInDay);
+      setStatus(leave.leave.leaveStatus)
+     
+     
+      } catch (error) {
       console.log(error.response)
     }
   }
@@ -55,8 +66,6 @@ const Home = () => {
         const user= JSON.parse(response)
         setLeave(user.leaves)
         console.log(user.leaves);
-        console.log(user.leaves[0]._id)
-        console.log(user.count)
     } catch (error) {
   console.log(error.response)
 
@@ -69,29 +78,26 @@ const Home = () => {
       headers: { Authorization: `Bearer ${jwt.token}` }
     };
     try {
-      await axios.delete(`/api/v1/leave/:${id}`,config);
-      const updatedLeaves=leave.filter((leave)=>{
-        return id !==leave._id
-      })
-      setLeave(updatedLeaves)
+      await axios.delete(`/api/v1/leave/${id}`,config);
+      setLeave(leave.filter((leave)=>{
+        return leave._id!==id;
+      }))
+      
   } catch (error) {
 console.log(error.response)
 
 
 }
   }
-  const updateHandler=async()=>{
+  const updateHandler=async(id)=>{
     const jwt= JSON.parse(localStorage.getItem('jwt'))
     const config = {
       headers: { Authorization: `Bearer ${jwt.token}` }
     };
+ 
     try {
-      const { data } = await axios.get('/api/v1/leave/:id',config);
-      const response=JSON.stringify(data);
-      const user= JSON.parse(response)
-      setLeave(user.leaves)
-      console.log(user.leaves)
-      console.log(user.count)
+      await axios.patch(`/api/v1/leave/${id}`,inputField,config);
+     
   } catch (error) {
 console.log(error.response)
 
@@ -117,7 +123,7 @@ console.log(error.response)
     <h3>Employee page</h3>
     <p style={{marginTop:'-10px',letterSpacing:'6px'}}>Good morning employee</p>
     <button className='btn btn-primary' onClick={logoutHandler}>Logout</button><br/>
-    {token?<button className='btn btn-success'>active</button>:<button className='btn btn-danger'>deactive</button>}
+    {/* {token?<button className='btn btn-success'>active</button>:<button className='btn btn-danger'>deactive</button>} */}
     <div className='col-6 text-start mx-4'>
      {errors && <div>{errors}</div>}   
     <form  onSubmit={submitHandler}>Leave Form
@@ -136,14 +142,37 @@ console.log(error.response)
           required/> 
         </div>
         <div className='form-group mb-3'>
+          <label className='from-label'>Leave Type:</label>
+          <input type="text" name='LeaveType' className=" form-control my-2"
+          value={inputField.LeaveType}
+           onChange={inputHandler}
+          required/> 
+          </div>
+          <div>
+          <label>
+              Priority:
+              <select
+                name="priority"
+                value={inputField.priority}
+                onChange={inputHandler}
+              >
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+              </select>
+            </label>
+        </div>
+        {/* <div className='form-group mb-3'>
           <label className='from-label'>Leave type:</label>
           <select name="LeaveType" value={inputField.LeaveType} onChange={inputHandler}>
           <option value="Sick">Sick</option>
-          <option value="Paternity">paternity</option>
-          <option value="Paid leave">Paid leave</option>
+          <option value="Paternity">Paternity</option>
+          <option value="Maternity">Maternity</option>
+          <option value="Sick">Sick</option>
           <option value="Bereavement">Bereavement</option>
+          <option value="Compensatory">Compensatory</option>
           </select>
-        </div>
+        </div> */}
         <div className='form-group mb-3'>
           <label className='from-label'>Why leave?</label>
           <textarea rows="4" cols="80" name="LeaveDetails"   
@@ -151,20 +180,21 @@ console.log(error.response)
           onChange={inputHandler}/>
         </div>
         <div>Hello hi</div>
-        <button type="submit" className="btn btn-primary button my-3">Submit</button>
+      {status?<button type="submit" className="btn btn-primary button my-3" disabled>Submit</button>:<button type="submit" className="btn btn-primary button my-3" >Submit</button>}  
     </form>
      </div>
-     <button type='button' onClick={viewHandler}>View leave created</button>
+     <button type='button' onClick={viewHandler} className='btn btn-secondary'>View leave created</button>
      {leave && <div>{leave.map((leave)=>{
-      const {_id:leaveId,LeaveType,EndLeaveDate,AdminRemark,AdminStatus,createdBy,StartLeaveDate,createdAt,updatedAt}=leave
-      return <div key={leaveId}>
+      const {_id,LeaveType,EndLeaveDate,AdminRemark,AdminStatus,StartLeaveDate,leaveStatus}=leave
+    
+      return <div key={_id}>
         <h3>{LeaveType}</h3>
         <h3>{StartLeaveDate}</h3>
         <h3>{EndLeaveDate}</h3>
         <h3>{AdminRemark}</h3>
         <h3>{AdminStatus}</h3>
-        <button onClick={()=>deleteHandler(leaveId)}>Delete leave</button>
-        <button onClick={updateHandler}>Update leave</button>
+        <button onClick={()=>deleteHandler(_id)}  className='btn btn-danger'>Delete leave</button>
+        <button onClick={()=>updateHandler(_id)} className='btn btn-success'>Update leave</button>
       </div>
      })}</div>}
   </section>

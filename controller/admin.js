@@ -1,7 +1,8 @@
 const Job=require('../models/leave')
 const {StatusCodes}=require('http-status-codes')
 const getAllLeaveByAdmin=async(req,res)=>{
-    const leaves= await Job.find().populate('createdBy').sort('leavePriority')
+    const leaves= await Job.find().populate('createdBy')
+    leaves.sort((a, b) => a.leavePriority - b.leavePriority)
     res.status(StatusCodes.OK).json({leaves,count:leaves.length})
 }
 
@@ -27,8 +28,9 @@ const getSingleLeaveByAdmin=async(req,res)=>{
 //     )
 // }
 const updateLeaveByAdmin=async(req,res)=>{
-    const {body:{AdminRemark,AdminStatus},params:{id:leaveId}}=req
-    if(AdminRemark==="" || AdminStatus===""){
+    const {body:{AdminRemark,AdminStatus,leaveStatus
+    },params:{id:leaveId}}=req
+    if(AdminRemark==="" || AdminStatus==="",leaveStatus===""){
         throw new BadRequestError('Fields cannot be empty ')
     }
     const leave= await Job.findByIdAndUpdate({_id:leaveId},req.body,{new:true,runValidators:true})

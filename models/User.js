@@ -51,6 +51,14 @@ salary:{
   type:Number,
   default:0
 },
+department:{
+  type:String,
+  default:"Intern"
+},
+dateofbirth:{
+  type: Date,
+  required: true,
+}
 
 })
 

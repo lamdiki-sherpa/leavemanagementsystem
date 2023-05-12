@@ -12,7 +12,7 @@ const getDepartment=async(req,res)=>{
         _id:departmentId
     })
     if(!department){
-        throw new NotFoundError(`No  department with id ${departmentId}`)
+throw new NotFoundError(`No  department with id ${departmentId}`)
     }
     res.status(StatusCodes.OK).json({department})
 }

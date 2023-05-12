@@ -48,8 +48,6 @@ const deleteEmployee=async(req,res)=>{
     if(!employee){
         throw new NotFoundError(`No  job with id ${employeeId}`)
     }
-    res.status(StatusCodes.OK).send(
-        
-    )
+    res.status(StatusCodes.OK).send('deleted')
 }
 module.exports={getAllEmployee,getEmployee,createEmployee,deleteEmployee,updateEmployee,getleavebySingleUserByAdmin}

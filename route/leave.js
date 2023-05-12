@@ -4,5 +4,4 @@ const {getAllLeaves,getLeave,updateLeave,deleteLeave,createLeave}=require('../co
 
 router.route('/').post(createLeave).get(getAllLeaves)
 router.route('/:id').get(getLeave).delete(deleteLeave).patch(updateLeave)
-
 module.exports=router

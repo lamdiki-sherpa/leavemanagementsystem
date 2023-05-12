@@ -26,6 +26,7 @@ const register=async(req,res)=>{
     const user =await User.create({
         name:req.body.name,
         email:req.body.email,
+        department:req.body.department,
         password:req.body.password,
         profile:req.file.filename
     })
@@ -37,6 +38,7 @@ const register=async(req,res)=>{
 }
 const login=async(req,res)=>{
 const {email,password}=req.body
+
 if(!email || !password){
  throw new BadRequestError('please provide email and password')
 }
@@ -49,11 +51,13 @@ if(!passwordMatch){
     throw new UnauthenticatedError('Password is incorrect')
 }
 const token =user.createJWT()
-res.cookie('t',token , {expire:new Date() + 9999}) 
-// res.status(StatusCodes.OK).json({user,token})
-res.status(StatusCodes.OK).json({msg:"Login Successfull",user:{name:user.name,roles:user.roles},token})
+if(token){
+   user.active="active"
 }
- 
+res.cookie('t',token , {expire:new Date() + 86400}) 
+res.status(StatusCodes.OK).json({user,token})
+// res.status(StatusCodes.OK).json({msg:"Login Successfull",user:{name:user.name,roles:user.roles},token})
+}
 const signOut=(req,res)=>{
     res.clearCookie('t')
     res.json({

@@ -12,8 +12,10 @@ const Dashboard = ({user}) => {
       name:'',
       email:'',
       password:'',
-      profile:''
+      profile:'',
+      department:''
   })
+ 
   const [leave,setLeave]=useState([])
   const [employee,setEmployee]=useState([])
   const [error,setError]=useState('')
@@ -110,6 +112,39 @@ const Dashboard = ({user}) => {
       }
 
     }
+    //=====================================ADMIN UPDATE EMPLOYEE===========================================
+    const adminupdateEmployeeHandler=async(id)=>{
+      const jwt= JSON.parse(localStorage.getItem('jwt'))
+      const config = {
+        headers: { Authorization: `Bearer ${jwt.token}` }
+      };
+    const salary=prompt("Enter new salary:")
+    try {
+    await Axios.patch(`/api/v1/employee/${id}`,{salary:salary},config)
+    setEmployee(employee.map((val)=>{
+      return val._id===id?{_id:id,name:val.name,email:val.email,salary:salary,roles:val.roles,profile:val.profile}:val
+    }))
+   
+    } catch (error) {
+      console.log(error.response)
+    }
+   
+    }
+    //======================================ADMIN DELETE EMPLOYEE=======================================
+    const admindeleteEmployeeHandler=async(id)=>{
+      const jwt= JSON.parse(localStorage.getItem('jwt'))
+      const config = {
+        headers: { Authorization: `Bearer ${jwt.token}` }
+      };
+      try {
+        await Axios.delete(`/api/v1/employee/${id}`,config)
+        setEmployee(employee.filter((val)=>{
+        return val._id !==id;
+        }))
+      } catch (error) {
+        console.log(error.response)
+      }
+    }
     //=======================================ADMIN VIEW SINGLE EMPLOYEE RECORDS===================================
     const leavebysingleemployeeHandler=async(id)=>{
       const jwt= JSON.parse(localStorage.getItem('jwt'))
@@ -137,8 +172,20 @@ const Dashboard = ({user}) => {
         const { data } = await Axios.get('/api/v1/admin',config);
         const response=JSON.stringify(data);
         const leave= JSON.parse(response)
-        setLeave(leave.leaves)
+        // setLeave(leave.leaves)
+        const scoredRequests =leave.leaves.map(request => {
+         
+           return { ...request };
+         });
+       scoredRequests.sort((a,b)=>{
+        if(a.leavePriority === b.leavePriority){
+          return b.leaveScore - a.leaveScore
+        }
+        return a.leavePriority-b.leavePriority
+      })
+      setLeave(scoredRequests)
         console.log(leave.leaves)
+       
     } catch (error) {
     if(error.response.statusText==="Unauthorized"){
       setError(error.response.data.msg)
@@ -148,6 +195,46 @@ const Dashboard = ({user}) => {
   
 }
     }
+    //============================ADMIN UPDATE/DECLINE/APPROVE LEAVE ===============================
+  const leavedeclineHandler=async(id)=>{
+    const jwt= JSON.parse(localStorage.getItem('jwt'))
+    const config = {
+      headers: { Authorization: `Bearer ${jwt.token}` }
+    };
+    try {
+     const {data} =await Axios.patch(`/api/v1/admin/${id}`,
+      {AdminRemark:'leave is not available',
+      AdminStatus:'Rejected',
+      leaveStatus:false
+      },
+      config);
+      const response=JSON.stringify(data);
+      const leave= JSON.parse(response)
+      console.log(leave)
+    } catch (error) {
+      console.log(error.response)
+    }
+  }
+  const leaveapproveHandler=async(id)=>{
+    const jwt= JSON.parse(localStorage.getItem('jwt'))
+    const config = {
+      headers: { Authorization: `Bearer ${jwt.token}` }
+    };
+    try {
+     const {data} =await Axios.patch(`/api/v1/admin/${id}`,
+      {AdminRemark:'leave granted',
+      AdminStatus:'Approved',
+      leaveStatus:false
+    },
+      config);
+      const response=JSON.stringify(data);
+      const leave= JSON.parse(response)
+      console.log(leave)
+    } catch (error) {
+      console.log(error.response)
+    }
+  }
+
     //////////====================ADMIN LOGOUT=========================================
     const logoutHandler=async()=>{
       const jwt= JSON.parse(localStorage.getItem('jwt'))
@@ -247,7 +334,16 @@ const Dashboard = ({user}) => {
            onChange={employeeInputHandler}
           required/> 
         </div>
-
+        <div className='form-group mb-3'>
+          <label className='from-label'>Department</label>
+          <select name="Department" value={employeeField.department} onChange={inputHandler}>
+          {department.map((department)=>{
+            const {DepartmentName,_id}=department
+           return <option key={_id} value={`${DepartmentName}`}>{DepartmentName}</option>
+           
+          })}
+           </select>
+        </div>
         </form>
         <button className='btn btn-secondary' onClick={employeeCreateHandler}>Add Employee</button><br/>
         <button className='btn btn-secondary' onClick={employeeViewHandler}>Employee List</button>
@@ -264,20 +360,24 @@ const Dashboard = ({user}) => {
    
        </tr>
             </thead>
-          {employee.map((employee)=>{
-            const {_id,name,email,salary,roles,profile}=employee
+            
+          {
+          employee.map((employee)=>{
+            const {_id,name,email,salary,roles,profile,active}=employee
+            
           return <div>
           {roles==="STAFF" && <tbody>
             <tr key={_id}>
             {/* <td>{_id}</td> */}
             <td><h3>{name}</h3>
-            {profile?<img src={profile} style={{height:'80px',width:'80px'}}/>:<img style={{height:'80px',width:'80px'}}/>} 
+            {profile?<img src={profile} style={{height:'80px',width:'80px'}} alt='img'/>:<img style={{height:'80px',width:'80px'}}/>} 
             </td>
             <td>{email}</td>
             <td>Rs.{salary}</td>
             <td>
-            <button className='btn btn-primary'>Update</button>
-            <button className='btn btn-danger'>Delete</button>
+            <button className='btn btn-primary' onClick={()=>adminupdateEmployeeHandler(_id)}
+            >Update</button>
+            <button className='btn btn-danger' onClick={()=>admindeleteEmployeeHandler(_id)}>Delete</button>
             <button  onClick={()=>leavebysingleemployeeHandler(_id)} className='btn btn-secondary'>Employee Leave record</button>
            
             </td>
@@ -318,24 +418,24 @@ const Dashboard = ({user}) => {
    
        </tr>
        </thead>
+       
           {leave.map((leave)=>{
-          const {_id,LeaveType,StartLeaveDate,EndLeaveDate,AdminStatus,AdminRemark,
+          let {_id,LeaveType,StartLeaveDate,EndLeaveDate,AdminStatus,AdminRemark,leaveScore
           }=leave
           const {createdBy:{name,profile}}=leave
-          // console.log(profile)
-          return <tbody>
+          return <tbody key={_id}>
 
-  <tr key={_id}>
+  <tr>
     <td>
      <h3>{name}</h3> 
-      <img src={profile} style={{height:'80px',width:'80px'}}/>
+      <img src={profile} style={{height:'80px',width:'80px'}} alt='img'/>
       </td>
     <td>{LeaveType}</td>
     <td>{StartLeaveDate}</td>
     <td>{EndLeaveDate}</td>
     <td>
-      <button className='btn btn-success'>Approve</button>
-      <button className='btn btn-danger'>Decline</button>
+      <button className='btn btn-success'onClick={()=>leaveapproveHandler(_id)} >Approve</button>
+      <button className='btn btn-danger' onClick={()=>leavedeclineHandler(_id)} >Decline</button>
     </td>
   </tr>
  </tbody> 

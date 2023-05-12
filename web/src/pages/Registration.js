@@ -7,7 +7,7 @@ const Signin = () => {
       name:'',
       email:'',
       password:'',
-      profile:''
+      profile:'',
     })
     const [error,setError]=useState('')
     const inputHandler=(e)=>{

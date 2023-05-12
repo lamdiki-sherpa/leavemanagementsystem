@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Signin from './pages/Registration';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import New from './pages/New'
 // import ProtectedRoute from './pages/ProtectedRoute';
 // import SharedProductLayout from './pages/SharedProductLayout';
 import Error from './pages/Error';
@@ -21,6 +22,7 @@ function App() {
       <Route  path='/admindashboard' element={<Dashboard user={user}/>}/>
       <Route  path='/login' element={<Login setUser={setUser}/>}/>
       <Route  path='/register' element={<Signin/>}/>
+      <Route path='/' element={<New/>}/>
     </Routes> 
  </BrowserRouter> 
 </div>
