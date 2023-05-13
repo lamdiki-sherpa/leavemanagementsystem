@@ -46,10 +46,6 @@ const LeaveSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    AvailableLeaveDayUpdatedAt: { 
-      type: Date,
-      default: Date.now,
-    },
   },
   { timestamps: true }
 );

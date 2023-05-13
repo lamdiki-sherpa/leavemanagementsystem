@@ -4,23 +4,36 @@ const { StatusCodes } = require("http-status-codes");
 const LeaveType = require("../models/LeaveType");
 const { default: mongoose, isValidObjectId } = require("mongoose");
 const { query } = require("express");
+const moment = require("moment");
 const { ROLES } = require("../constant");
 
 const getAllLeaves = async (req, res) => {
   req.query.order = req.query.order === "ASC" ? 1 : -1;
+  req.query.AdminStatus = req.query.AdminStatus
+    ? req.query.AdminStatus
+    : req.user.roles === ROLES.ADMIN
+    ? "Pending"
+    : "Approved";
   req.query.sortBy = req.query.sortBy ? req.query.sortBy : "createdAt";
   let sortReq = {};
   if (req.query.sortBy) {
     sortReq[req.query.sortBy] = req.query.order;
   }
-  let matchReq = {};
+  let matchReq = { AdminStatus: req.query.AdminStatus };
+  let leaveTypeReq = {};
   if (req.user.roles !== ROLES.ADMIN) {
     matchReq["createdBy"] = mongoose.Types.ObjectId(req.user.userId);
   }
+
+  // to filter based on leave priority of user leave application
   if (req.query.leavePriority) {
     matchReq["leavePriority"] = +req.query.leavePriority;
   }
-  console.log(req.query.LeaveType);
+
+  // to filter based on leaveType leave priority
+  if (req.query.leaveTypePriority) {
+    leaveTypeReq["leavetypes.leavePriority"] = +req.query.leaveTypePriority;
+  }
   if (req.query.LeaveType) {
     if (isValidObjectId(req.query.LeaveType)) {
       matchReq["LeaveType"] = mongoose.Types.ObjectId(req.query.LeaveType);
@@ -28,6 +41,24 @@ const getAllLeaves = async (req, res) => {
       // if leavetype is of invalid objectid,  return empty array
       res.status(StatusCodes.OK).json({ leaves: [], count: 0 });
     }
+  }
+
+  // startDate and endDate filter
+  if (req.query.startDate && req.query.endDate) {
+    var today = new Date(
+      moment(req.query.startDate).startOf("day").toISOString()
+    );
+    // "2018-12-05T00:00:00.00
+    var tomorrow = new Date(
+      moment(req.query.endDate).endOf("day").toISOString()
+    );
+    matchReq = {
+      ...matchReq,
+      $and: [
+        { StartLeaveDate: { $gt: new Date(today) } },
+        { EndLeaveDate: { $lt: new Date(tomorrow) } },
+      ],
+    };
   }
   try {
     const leaves = await Job.aggregate([
@@ -41,6 +72,9 @@ const getAllLeaves = async (req, res) => {
           foreignField: "_id",
           as: "leavetypes",
         },
+      },
+      {
+        $match: leaveTypeReq,
       },
       { $sort: sortReq },
     ]);
@@ -147,7 +181,6 @@ const createLeave = async (req, res) => {
         },
         $set: {
           EndLeaveDate: req.body.EndLeaveDate,
-          AvailableLeaveDayUpdatedAt: new Date(),
           StartLeaveDate: req.body.StartLeaveDate,
         },
       },
