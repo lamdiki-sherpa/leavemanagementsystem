@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const LeaveSchema = new mongoose.Schema(
   {
     LeaveType: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LeaveType",
       required: true,
     },
     LeaveDetails: {
@@ -34,7 +35,8 @@ const LeaveSchema = new mongoose.Schema(
     },
     leavePriority: {
       type: Number,
-      default: 0,
+      default: 1,
+      enum: [1, 2, 3]
     },
     AvailableLeaveDay: {
       type: Number,
@@ -43,6 +45,10 @@ const LeaveSchema = new mongoose.Schema(
     leaveScore: {
       type: Number,
       default: 0,
+    },
+    AvailableLeaveDayUpdatedAt: { 
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true }

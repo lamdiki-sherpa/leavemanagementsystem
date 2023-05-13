@@ -22,6 +22,7 @@ const getEmployee=async(req,res)=>{
     res.status(StatusCodes.OK).json({employee})
 }
 const createEmployee=async(req,res)=>{
+    console.log('hello')
     const employee =await User.create({
         name:req.body.name,
         email:req.body.email,

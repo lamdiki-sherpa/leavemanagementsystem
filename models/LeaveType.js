@@ -16,8 +16,6 @@ const LeaveTypeSchema = new mongoose.Schema(
           type:Number,
           default:0
         },
-        
-      
       },
   );
 

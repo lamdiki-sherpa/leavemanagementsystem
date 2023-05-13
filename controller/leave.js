@@ -1,12 +1,53 @@
 const Job = require("../models/leave");
 const { BadRequestError, NotFoundError } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
+const LeaveType = require("../models/LeaveType");
+const { default: mongoose, isValidObjectId } = require("mongoose");
+const { query } = require("express");
+const { ROLES } = require("../constant");
 
 const getAllLeaves = async (req, res) => {
-  const leaves = await Job.find({ createdBy: req.user.userId }).sort(
-    "createdAt"
-  );
-  res.status(StatusCodes.OK).json({ leaves, count: leaves.length });
+  req.query.order = req.query.order === "ASC" ? 1 : -1;
+  req.query.sortBy = req.query.sortBy ? req.query.sortBy : "createdAt";
+  let sortReq = {};
+  if (req.query.sortBy) {
+    sortReq[req.query.sortBy] = req.query.order;
+  }
+  let matchReq = {};
+  if (req.user.roles !== ROLES.ADMIN) {
+    matchReq["createdBy"] = mongoose.Types.ObjectId(req.user.userId);
+  }
+  if (req.query.leavePriority) {
+    matchReq["leavePriority"] = +req.query.leavePriority;
+  }
+  console.log(req.query.LeaveType);
+  if (req.query.LeaveType) {
+    if (isValidObjectId(req.query.LeaveType)) {
+      matchReq["LeaveType"] = mongoose.Types.ObjectId(req.query.LeaveType);
+    } else {
+      // if leavetype is of invalid objectid,  return empty array
+      res.status(StatusCodes.OK).json({ leaves: [], count: 0 });
+    }
+  }
+  try {
+    const leaves = await Job.aggregate([
+      {
+        $match: matchReq,
+      },
+      {
+        $lookup: {
+          from: "leavetypes",
+          localField: "LeaveType",
+          foreignField: "_id",
+          as: "leavetypes",
+        },
+      },
+      { $sort: sortReq },
+    ]);
+    res.status(StatusCodes.OK).json({ leaves, count: leaves.length });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getLeave = async (req, res) => {
@@ -76,42 +117,55 @@ const createLeave = async (req, res) => {
   const start = new Date(req.body.StartLeaveDate).getTime();
   const end = new Date(req.body.EndLeaveDate).getTime();
   const diffInMs = end - start;
-  const diffInDay = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  console.log(diffInDay);
-  const leaveType = req.body.LeaveType; // cron.schedule('* * * * *', async () => { //     await autoRejectLeaveRequests(); //   });
-  if (leaveType === "Sick") {
-    req.body.leavePriority = 4;
-    req.body.AvailableLeaveDay = 7;
-  } else if (leaveType === "Bereavement") {
-    req.body.leavePriority = 1;
-    req.body.AvailableLeaveDay = 13;
-  } else if (leaveType === "Maternity") {
-    req.body.leavePriority = 2;
-    req.body.AvailableLeaveDay = 60;
-  } else if (leaveType === "Paternity") {
-    req.body.leavePriority = 3;
-    req.body.AvailableLeaveDay = 15;
-  } else if (leaveType === "Annual") {
-    req.body.leavePriority = 5;
-    req.body.AvailableLeaveDay = 12;
-  } else if (leaveType === "Religious") {
-    req.body.leavePriority = 6;
-    req.body.AvailableLeaveDay = 5;
-  } else if (leaveType === "Unpaid") {
-    req.body.leavePriority = 7;
-    req.body.AvailableLeaveDay = 7;
-  } else if (leaveType === "Compensatory") {
-    req.body.leavePriority = 8;
-    req.body.AvailableLeaveDay = 30;
-  } else {
-    req.body.leavePriority = 9;
+  // if startdate is greater than end date, we will throw error, as it can cause security and logical issue
+  if (end < start) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "StartDate exceeds EndDate" });
   }
-  const daysavailable = req.body.AvailableLeaveDay - diffInDay;
-  req.body.leaveScore = daysavailable * req.body.leavePriority;
-  console.log(req.body.leaveScore);
-  req.body.AvailableLeaveDay = daysavailable;
-  const leave = await Job.create(req.body);
-  res.status(StatusCodes.CREATED).json({ leave });
+  const diffInDay = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const leaveType = await LeaveType.findById(req.body.LeaveType);
+  const previousLeaveRecord = await Job.findOne({
+    createdBy: req.user.userId,
+    LeaveType: req.body.LeaveType,
+  });
+  // if  we find, we will check if alredy exits then  we will calculate remainingdays left and update in database.
+  //else we didn't find any previous leave records of this user with particular leave type, we will update the available days
+  if (previousLeaveRecord) {
+    const remainingDays = +previousLeaveRecord.AvailableLeaveDay - +diffInDay;
+    if (remainingDays < 0) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: "leave exceeds available days." });
+    }
+    const resp = await Job.findByIdAndUpdate(
+      previousLeaveRecord._id,
+      {
+        $inc: {
+          AvailableLeaveDay: -diffInDay,
+          leaveScore: +diffInDay * req.body.leavePriority,
+        },
+        $set: {
+          EndLeaveDate: req.body.EndLeaveDate,
+          AvailableLeaveDayUpdatedAt: new Date(),
+          StartLeaveDate: req.body.StartLeaveDate,
+        },
+      },
+      { new: true }
+    );
+    res.status(StatusCodes.OK).json(resp);
+  } else {
+    const remainingDays = +leaveType.LeavePerYear - +diffInDay;
+    console.log(remainingDays);
+    if (remainingDays < 0) {
+      res.status(StatusCodes.BAD_REQUEST).json({ msg: "Leave days exceed" });
+    }
+    req.body.AvailableLeaveDay = remainingDays;
+    req.body.leaveScore = remainingDays * req.body.leavePriority;
+
+    const resp = await Job.create(req.body);
+    res.status(StatusCodes.CREATED).json(resp);
+  }
 };
 
 const updateLeave = async (req, res) => {
@@ -155,3 +209,36 @@ module.exports = {
   createLeave,
   autoRejectLeaveRequests,
 };
+
+// const leaveType = req.body.LeaveType; // cron.schedule('* * * * *', async () => { //     await autoRejectLeaveRequests(); //   });
+// if (leaveType === "Sick") {
+//   req.body.leavePriority = 4;
+//   req.body.AvailableLeaveDay = 7;
+// } else if (leaveType === "Bereavement") {
+//   req.body.leavePriority = 1;
+//   req.body.AvailableLeaveDay = 13;
+// } else if (leaveType === "Maternity") {
+//   req.body.leavePriority = 2;
+//   req.body.AvailableLeaveDay = 60;
+// } else if (leaveType === "Paternity") {
+//   req.body.leavePriority = 3;
+//   req.body.AvailableLeaveDay = 15;
+// } else if (leaveType === "Annual") {
+//   req.body.leavePriority = 5;
+//   req.body.AvailableLeaveDay = 12;
+// } else if (leaveType === "Religious") {
+//   req.body.leavePriority = 6;
+//   req.body.AvailableLeaveDay = 5;
+// } else if (leaveType === "Unpaid") {
+//   req.body.leavePriority = 7;
+//   req.body.AvailableLeaveDay = 7;
+// } else if (leaveType === "Compensatory") {
+//   req.body.leavePriority = 8;
+//   req.body.AvailableLeaveDay = 30;
+// } else {
+//   req.body.leavePriority = 9;
+// }
+// const daysavailable = req.body.AvailableLeaveDay - diffInDay;
+// req.body.leaveScore = daysavailable * req.body.leavePriority;
+// console.log(req.body.leaveScore);
+// req.body.AvailableLeaveDay = daysavailable;
