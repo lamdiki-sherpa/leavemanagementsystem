@@ -1,0 +1,817 @@
+{
+	"info": {
+		"_postman_id": "1f55c0e4-3b95-43a1-b4f9-7fc8f454d002",
+		"name": "practical",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{   \"name\":\"regan\",\r\n    \"email\":\"regan@gmail.com\",\r\n    \"password\":\"secret\",\r\n    \"roles\":\"ADMIN\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/auth/register",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"regan@gmail.com\",\r\n    \"password\":\"secret\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create department",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4MTczNTU3MCwiZXhwIjoxNjg0MzI3NTcwfQ.msXCBHnAjhy1F2qTRM_eU4jB5ZUh38fBb_WOQFzs8wQ",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"DepartmentName\":\"frontdesk\",\r\n    \"DepartmentDetails\":\"This is frontdesk department.\",\r\n    \"DepartmentStatus\":\"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/department",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"department"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all department",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/department",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"department"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single department",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/department/643d0941e52f86c11712b68a",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"department",
+						"643d0941e52f86c11712b68a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update department",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"DepartmentName\":\"coding\",\r\n    \"DepartmentDetails\":\"This is coding department.\",\r\n    \"DepartmentStatus\":\"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/department/643d0941e52f86c11712b68a",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"department",
+						"643d0941e52f86c11712b68a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete department",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/department/643d0941e52f86c11712b68a",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"department",
+						"643d0941e52f86c11712b68a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create leaveType",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5MTc3OCwiZXhwIjoxNjg1MzgzNzc4fQ.SJAGJFStAiqhDqZdFqHwr3cRYft1wC3fIYZeVH9B8Ec",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"LeaveTypeName\":\"Try\",\r\n    \"LeaveTypeDetails\":\"\",\r\n    \"LeavePerYear\":\"30\",\r\n    \"LeavePriority\":\"8\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/leaveType",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leaveType"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all leaveTypes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5MTc3OCwiZXhwIjoxNjg1MzgzNzc4fQ.SJAGJFStAiqhDqZdFqHwr3cRYft1wC3fIYZeVH9B8Ec",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leaveType",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leaveType"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single leaveType",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leaveType/643d152b2e117374f3dd90f0",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leaveType",
+						"643d152b2e117374f3dd90f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update leaveType",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"LeaveTypeName\":\"sick\",\r\n    \"LeaveTypeDetails\":\"sick leave is given to employee if one gets sick.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/leaveType/643d152b2e117374f3dd90f0",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leaveType",
+						"643d152b2e117374f3dd90f0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete leaveType",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5MTc3OCwiZXhwIjoxNjg1MzgzNzc4fQ.SJAGJFStAiqhDqZdFqHwr3cRYft1wC3fIYZeVH9B8Ec",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leaveType/644d5b7e7cc5ec13ecbe37d7",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leaveType",
+						"644d5b7e7cc5ec13ecbe37d7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5ODcxMCwiZXhwIjoxNjg1MzkwNzEwfQ.sk_wEB08YIebxduy16iyhJOqO6bPPzdv20dnpbdvFgk",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Dora\",\r\n    \"email\":\"dora@gmail.com\",\r\n    \"password\":\"dora123\",\r\n    \"roles\":\"STAFF\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/employee",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all employees",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5ODcxMCwiZXhwIjoxNjg1MzkwNzEwfQ.sk_wEB08YIebxduy16iyhJOqO6bPPzdv20dnpbdvFgk",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/employee",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single employee",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4MzAzMjY2MCwiZXhwIjoxNjg1NjI0NjYwfQ.M-kaO4nLWFhiaCpdosJ08byp-relhUQcl5ojFl3Wmdo",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/employee/643d3d5aaa0f9ffdcf24012e",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"643d3d5aaa0f9ffdcf24012e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update employee",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5ODcxMCwiZXhwIjoxNjg1MzkwNzEwfQ.sk_wEB08YIebxduy16iyhJOqO6bPPzdv20dnpbdvFgk",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"salary\":15000\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/employee/644d78b783e8f35ea2dae3eb",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"644d78b783e8f35ea2dae3eb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete employee",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMDZhMGU1MmY4NmMxMTcxMmI2ODAiLCJuYW1lIjoiaG9yc2UiLCJlbWFpbCI6ImhvcnNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyMTExNCwiZXhwIjoxNjg0MzEzMTE0fQ._ZdZpEXJVqgiZ6GqpTBETU5t9cMvFeaUctpi7DxonW4",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/employee/643d06a0e52f86c11712b680",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"643d06a0e52f86c11712b680"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create leave",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDQ0MDFkNWU1ZmIxMDMxMTljNWY5OWUiLCJuYW1lIjoicHJhY3Rpc2UiLCJlbWFpbCI6InByYWN0aXNlQGdtYWlsLmNvbSIsImlhdCI6MTY4MjgyODk3OCwiZXhwIjoxNjg1NDIwOTc4fQ.IeYg8_Yg9yTr31M-ueBklCg0J37c7NAFN5h_c6wCESM",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"LeaveType\":\"645e7603dea68958d46eeb95\",\r\n    \"EndLeaveDate\":\"2023-05-15\",\r\n    \"StartLeaveDate\": \"2023-05-13\",\r\n    \"LeaveDetails\":\"Need leave\",\r\n    \"leavePriority\": 3\r\n    \r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/leave",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leave"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all leaves",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDVlNzVmMWRlYTY4OTU4ZDQ2ZWViOTIiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJyb2xlcyI6IkFETUlOIiwiaWF0IjoxNjgzOTUyNzA3LCJleHAiOjE2ODY1NDQ3MDd9.sIfxx0XxdCsfUHMI0P0eMOo2oo0K2TyuUvc_P0P--0s",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leave?order=DESC&sortBy=createdAt&leavePriority=1&LeaveType=&leaveTypePriority",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leave"
+					],
+					"query": [
+						{
+							"key": "order",
+							"value": "DESC",
+							"description": "Available Optionss: DESC, ASC"
+						},
+						{
+							"key": "sortBy",
+							"value": "createdAt",
+							"description": "createdAt, leavePriority"
+						},
+						{
+							"key": "leavePriority",
+							"value": "1",
+							"description": "high 3, medium: 2, low: 1, based  on user prority set"
+						},
+						{
+							"key": "LeaveType",
+							"value": "",
+							"description": "must be leaveType id"
+						},
+						{
+							"key": "leaveTypePriority",
+							"value": null,
+							"description": "high 3, medium: 2, low: 1 based on leaveType prority set"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single leave",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDQ0MDFkNWU1ZmIxMDMxMTljNWY5OWUiLCJuYW1lIjoicHJhY3Rpc2UiLCJlbWFpbCI6InByYWN0aXNlQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc4OTQ5OSwiZXhwIjoxNjg1MzgxNDk5fQ.lHoVkV6hjMnDZOM6U79Pll4tIGCPmaDEubp53WoiS3A",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leave/644d54a43bddabeabbd9e2ec",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leave",
+						"644d54a43bddabeabbd9e2ec"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update leave",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMjc3ODdmNmQwZjEzZmU2ZmI3MTciLCJuYW1lIjoibWVlcnUiLCJlbWFpbCI6Im1lZXJ1QGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyOTQxMywiZXhwIjoxNjg0MzIxNDEzfQ.wG3z1QiND2NJJpjYskcwL40Fr3Y1fxlTtqrod8o6-D8",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"LeaveType\":\"paternity\",\r\n    \"EndLeaveDate\":\"2023-08-12\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/leave/643d3915c299cfe2ecda3dc8",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leave",
+						"643d3915c299cfe2ecda3dc8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete leave",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkMjc3ODdmNmQwZjEzZmU2ZmI3MTciLCJuYW1lIjoibWVlcnUiLCJlbWFpbCI6Im1lZXJ1QGdtYWlsLmNvbSIsImlhdCI6MTY4MTcyOTQxMywiZXhwIjoxNjg0MzIxNDEzfQ.wG3z1QiND2NJJpjYskcwL40Fr3Y1fxlTtqrod8o6-D8",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/leave/643d3b7e3391cacb2c2ac344",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"leave",
+						"643d3b7e3391cacb2c2ac344"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all leave by admin",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc5MTc3OCwiZXhwIjoxNjg1MzgzNzc4fQ.SJAGJFStAiqhDqZdFqHwr3cRYft1wC3fIYZeVH9B8Ec",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/admin",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update leave by admin",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4Mjc4OTc5MywiZXhwIjoxNjg1MzgxNzkzfQ.9pbN0CwX7W2Zqp-D8CjfnqwVLrgXrWOXkdnZLU9GjGw",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"AdminRemark\":\"leave is not available\",\r\n    \"AdminStatus\":\"Rejected\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/api/v1/admin/644d54a43bddabeabbd9e2ec",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"admin",
+						"644d54a43bddabeabbd9e2ec"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signout",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4MjgyNTE0NywiZXhwIjoxNjg1NDE3MTQ3fQ.aTnekndAhkxzX8oI_8SWUCkOo50GuKxAUWt0I_OOjwU",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/auth/signout",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"signout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getleavebySingleUserByAdmin",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NDNkM2Q1YWFhMGY5ZmZkY2YyNDAxMmUiLCJuYW1lIjoicmVnYW4iLCJlbWFpbCI6InJlZ2FuQGdtYWlsLmNvbSIsImlhdCI6MTY4MzAzMjY2MCwiZXhwIjoxNjg1NjI0NjYwfQ.M-kaO4nLWFhiaCpdosJ08byp-relhUQcl5ojFl3Wmdo",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:5000/api/v1/employee/leaves/644401d5e5fb103119c5f99e",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"employee",
+						"leaves",
+						"644401d5e5fb103119c5f99e"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
