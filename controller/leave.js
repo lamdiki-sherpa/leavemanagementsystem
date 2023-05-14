@@ -60,28 +60,24 @@ const getAllLeaves = async (req, res) => {
       ],
     };
   }
-  try {
-    const leaves = await Job.aggregate([
-      {
-        $match: matchReq,
+  const leaves = await Job.aggregate([
+    {
+      $match: matchReq,
+    },
+    {
+      $lookup: {
+        from: "leavetypes",
+        localField: "LeaveType",
+        foreignField: "_id",
+        as: "leavetypes",
       },
-      {
-        $lookup: {
-          from: "leavetypes",
-          localField: "LeaveType",
-          foreignField: "_id",
-          as: "leavetypes",
-        },
-      },
-      {
-        $match: leaveTypeReq,
-      },
-      { $sort: sortReq },
-    ]);
-    res.status(StatusCodes.OK).json({ leaves, count: leaves.length });
-  } catch (error) {
-    console.log(error);
-  }
+    },
+    {
+      $match: leaveTypeReq,
+    },
+    { $sort: sortReq },
+  ]);
+  res.status(StatusCodes.OK).json({ leaves, count: leaves.length });
 };
 
 const getLeave = async (req, res) => {
@@ -175,10 +171,10 @@ const createLeave = async (req, res) => {
     const resp = await Job.findByIdAndUpdate(
       previousLeaveRecord._id,
       {
-        $inc: {
-          AvailableLeaveDay: -diffInDay,
-          leaveScore: +diffInDay * req.body.leavePriority,
-        },
+        // $inc: {
+        //   AvailableLeaveDay: -diffInDay,
+        //   leaveScore: +diffInDay * req.body.leavePriority,
+        // },
         $set: {
           EndLeaveDate: req.body.EndLeaveDate,
           StartLeaveDate: req.body.StartLeaveDate,
@@ -188,36 +184,68 @@ const createLeave = async (req, res) => {
     );
     res.status(StatusCodes.OK).json(resp);
   } else {
-    const remainingDays = +leaveType.LeavePerYear - +diffInDay;
+    // const remainingDays = +leaveType.LeavePerYear - +diffInDay;
     console.log(remainingDays);
     if (remainingDays < 0) {
       res.status(StatusCodes.BAD_REQUEST).json({ msg: "Leave days exceed" });
     }
-    req.body.AvailableLeaveDay = remainingDays;
-    req.body.leaveScore = remainingDays * req.body.leavePriority;
+    req.body.AvailableLeaveDay = leaveType.LeavePerYear;
+    // req.body.leaveScore = remainingDays * req.body.leavePriority;
 
     const resp = await Job.create(req.body);
     res.status(StatusCodes.CREATED).json(resp);
   }
 };
 
-const updateLeave = async (req, res) => {
+const approveLeave = async (req, res) => {
   const {
-    body: { LeaveType, StartLeaveDate, EndLeaveDate },
-    user: { userId },
     params: { id: leaveId },
   } = req;
-  if (LeaveType === "" || StartLeaveDate === "" || EndLeaveDate === "") {
-    throw new BadRequestError("Fields cannot be empty ");
-  }
-  const leave = await Job.findByIdAndUpdate(
-    { _id: leaveId, createdBy: userId },
-    req.body,
-    { new: true, runValidators: true }
-  );
-  if (!leave) {
+  const previousLeaveRecord = await Job.findById(leaveId);
+  if (!previousLeaveRecord) {
     throw new NotFoundError(`No  job with id ${leaveId}`);
   }
+  const start = new Date(previousLeaveRecord.StartLeaveDate).getTime();
+  const end = new Date(previousLeaveRecord.EndLeaveDate).getTime();
+  const diffInMs = end - start;
+  const diffInDay = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const leave = await Job.findByIdAndUpdate(
+    previousLeaveRecord._id,
+    {
+      $inc: {
+        AvailableLeaveDay: -diffInDay,
+        leaveScore: +diffInDay * previousLeaveRecord.leavePriority,
+      },
+      $set: {
+        EndLeaveDate: previousLeaveRecord.EndLeaveDate,
+        StartLeaveDate: previousLeaveRecord.StartLeaveDate,
+        AdminStatus: "Approved",
+        AdminRemark: req.body.AdminRemark,
+      },
+    },
+    { new: true }
+  );
+  res.status(StatusCodes.OK).json({ leave });
+};
+const rejectLeave = async (req, res) => {
+  const {
+    params: { id: leaveId },
+  } = req;
+  const previousLeaveRecord = await Job.findById(leaveId);
+  if (!previousLeaveRecord) {
+    throw new NotFoundError(`No  job with id ${leaveId}`);
+  }
+
+  const leave = await Job.findByIdAndUpdate(
+    previousLeaveRecord._id,
+    {
+      $set: {
+        AdminStatus: "Rejected",
+        AdminRemark: req.body.AdminRemark,
+      },
+    },
+    { new: true }
+  );
   res.status(StatusCodes.OK).json({ leave });
 };
 const deleteLeave = async (req, res) => {
@@ -237,7 +265,8 @@ const deleteLeave = async (req, res) => {
 module.exports = {
   getAllLeaves,
   getLeave,
-  updateLeave,
+  rejectLeave,
+  approveLeave,
   deleteLeave,
   createLeave,
   autoRejectLeaveRequests,
