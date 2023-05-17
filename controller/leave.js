@@ -216,7 +216,7 @@ const updateLeave = async (req, res) => {
     { new: true, runValidators: true }
   );
   if (!leave) {
-    throw new NotFoundError(`No  job with id ${leaveId}`);
+    throw new NotFoundError(`No  leave with id ${leaveId}`);
   }
   res.status(StatusCodes.OK).json({ leave });
 };
@@ -230,7 +230,7 @@ const deleteLeave = async (req, res) => {
     createdBy: userId,
   });
   if (!leave) {
-    throw new NotFoundError(`No  job with id ${leaveId}`);
+    throw new NotFoundError(`No  leave with id ${leaveId}`);
   }
   res.status(StatusCodes.OK).send();
 };
