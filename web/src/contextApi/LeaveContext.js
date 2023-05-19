@@ -12,7 +12,7 @@ const LeaveContextProvider = ({ children }) => {
 
   const [employeeName, setEmployeeName] = useState("");
   const [leave, setLeave] = useState([]);
-
+  const [leaveTpes, setLeaveTypes] = useState([]);
   return (
     <LeaveContext.Provider
       value={{
@@ -26,6 +26,8 @@ const LeaveContextProvider = ({ children }) => {
         setAdminLoggedIn,
         userLoggedIn,
         setuserLoggedIn,
+        leaveTpes, 
+        setLeaveTypes
       }}
     >
       {children}
