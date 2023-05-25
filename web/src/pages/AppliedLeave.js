@@ -45,15 +45,17 @@ const AppliedLeave = () => {
     const jwt = JSON.parse(localStorage.getItem("jwt"));
     const config = {
       headers: { Authorization: `Bearer ${jwt.token}` },
+      params: {
+        AdminStatus:'ALL'
+      }
     };
     try {
-      const { data } = await axios.get("/api/v1/leave", config);
+      const { data } = await axios.get("/api/v1/leave",config);
       const response = JSON.stringify(data);
       const user = JSON.parse(response);
       setLeave(user.leaves);
       console.log(user.leaves);
-      console.log(user.leaves[0]._id);
-      console.log(user.count);
+      console.log(user);
     } catch (error) {
       console.log(error.response);
     }
@@ -94,9 +96,13 @@ const AppliedLeave = () => {
                       createdAt,
                       updatedAt,
                     } = leave;
+                    const {
+                     leavetypes : { LeaveTypeName
+                     },
+                    } = leave;
                     return (
                       <tr key={leaveId}>
-                        <td>{LeaveType}</td>
+                        <td>{LeaveTypeName}</td>
                         <td>{StartLeaveDate.split("T00:00:00.000Z")}</td>
                         <td>{EndLeaveDate.split("T00:00:00.000Z")}</td>
                         <td>{AdminStatus}</td>

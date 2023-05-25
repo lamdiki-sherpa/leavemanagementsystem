@@ -13,6 +13,7 @@ import CompanyLeave from "./pages/CompanyLeave";
 import AppliedLeave from "./pages/AppliedLeave";
 import Departments from "./pages/Departments";
 import Employees from "./pages/Employees";
+import LeaveType from "./pages/LeaveType";
 import AdminCompanyLeave from "./components/AdminCompanyLeave";
 import { LeaveContext } from "./contextApi/LeaveContext";
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/applied-leave" element={<AppliedLeave />} />
             <Route path="/departments" element={<Departments />} />
             <Route path="/employees" element={<Employees />} />
+            <Route path="/leavetypes" element={<LeaveType />} />
             <Route
               path="/admin-company-leave"
               element={<AdminCompanyLeave />}

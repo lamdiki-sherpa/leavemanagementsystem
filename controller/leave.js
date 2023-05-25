@@ -5,15 +5,17 @@ const LeaveType = require("../models/LeaveType");
 const { default: mongoose, isValidObjectId } = require("mongoose");
 const { query } = require("express");
 const moment = require("moment");
-const { ROLES } = require("../constant");
+const { ROLES ,AdminStatus} = require("../constant");
 
 const getAllLeaves = async (req, res) => {
   req.query.order = req.query.order === "ASC" ? 1 : -1;
   req.query.AdminStatus = req.query.AdminStatus
     ? req.query.AdminStatus
     : req.user.roles === ROLES.ADMIN
-    ? "Pending"
-    : "Approved";
+    ? "Approved"
+    : "Pending";
+    
+    console.log(req.query,"21")
   req.query.sortBy = req.query.sortBy ? req.query.sortBy : "createdAt";
   let sortReq = {};
   if (req.query.sortBy) {
@@ -23,6 +25,11 @@ const getAllLeaves = async (req, res) => {
   let leaveTypeReq = {};
   if (req.user.roles !== ROLES.ADMIN) {
     matchReq["createdBy"] = mongoose.Types.ObjectId(req.user.userId);
+  }
+  if(req.query.AdminStatus==="ALL"){
+    console.log(req.query,"18")
+    delete req.query.AdminStatus
+    delete matchReq.AdminStatus
   }
 
   // to filter based on leave priority of user leave application
@@ -60,6 +67,7 @@ const getAllLeaves = async (req, res) => {
       ],
     };
   }
+  console.log(matchReq);
   const leaves = await Job.aggregate([
     {
       $match: matchReq,
@@ -73,10 +81,19 @@ const getAllLeaves = async (req, res) => {
       },
     },
     {
+      $lookup: {
+        from: "users",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "createdBy",
+      },
+    },
+   
+    {
       $match: leaveTypeReq,
     },
     { $sort: sortReq },
-  ]);
+  ])
   res.status(StatusCodes.OK).json({ leaves, count: leaves.length });
 };
 
@@ -94,40 +111,6 @@ const getLeave = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ leave });
 };
-// const createLeave=async(req,res)=>{
-//     req.body.createdBy=req.user.userId
-//     const leaveType=req.body.LeaveType
-//     // console.log(req.body.LeaveType)
-//     if(leaveType==="Sick"){
-//         req.body.leavePriority=4
-//     }
-//     else if(leaveType==="Bereavement"){
-//     req.body.leavePriority=1
-//     }
-//     else if(leaveType==="Maternity"){
-//     req.body.leavePriority=2
-//         }
-//     else if(leaveType==="Paternity"){
-//     req.body.leavePriority=3
-//             }
-//     else if(leaveType==="Annual"){
-//      req.body.leavePriority=5
-//     }
-//     else if(leaveType==="Religious"){
-//         req.body.leavePriority=6
-//        }
-//     else if(leaveType==="Unpaid"){
-//         req.body.leavePriority=7
-//        }
-//      else if(leaveType==="Compensatory"){
-//         req.body.leavePriority=8
-//        }
-//        else{
-//         req.body.leavePriority=9
-//        }
-//     const leave = await Job.create(req.body)
-//     res.status(StatusCodes.CREATED).json({leave})
-// }
 
 const autoRejectLeaveRequests = async () => {
   const pendingRequests = await Job.find({ AdminStatus: "Pending" });
@@ -143,6 +126,19 @@ const autoRejectLeaveRequests = async () => {
 };
 
 const createLeave = async (req, res) => {
+  console.log(req.user);
+  const leave= await Job.aggregate([
+
+    {$match: {createdBy: mongoose.Types.ObjectId(req.user.userId)}},
+      { $sort: { createdAt: -1 } },
+      {$limit:1}
+    ])
+    if(leave?.[0]?.AdminStatus==="Pending"){
+     
+      res.status(StatusCodes.OK).json({msg:"leave pending.cannot create leave.",status:false})
+    }
+
+    console.log(leave);
   req.body.createdBy = req.user.userId;
   const start = new Date(req.body.StartLeaveDate).getTime();
   const end = new Date(req.body.EndLeaveDate).getTime();
@@ -184,8 +180,8 @@ const createLeave = async (req, res) => {
     );
     res.status(StatusCodes.OK).json(resp);
   } else {
-    // const remainingDays = +leaveType.LeavePerYear - +diffInDay;
-    console.log(remainingDays);
+    const remainingDays = +leaveType.LeavePerYear - +diffInDay;
+    // console.log(remainingDays);
     if (remainingDays < 0) {
       res.status(StatusCodes.BAD_REQUEST).json({ msg: "Leave days exceed" });
     }
@@ -196,7 +192,24 @@ const createLeave = async (req, res) => {
     res.status(StatusCodes.CREATED).json(resp);
   }
 };
+const checkLeave=async(req,res)=>{
+  console.log(req.user);
+  const leave= await Job.aggregate([
 
+      {$match: {createdBy: mongoose.Types.ObjectId(req.user.userId),}},
+      { $sort: { createdAt: -1 } },
+      {$limit:1}
+    ])
+    console.log(leave);
+    if(leave?.[0]?.AdminStatus==="Pending"){
+     
+      res.status(StatusCodes.OK).json({msg:"leave pending.cannot create leave.",status:false})
+    }else{
+      res.status(StatusCodes.OK).json({msg:"can cerate leave",status:true})
+    }
+    
+    // res.status(StatusCodes.OK).json(leave)
+}
 const approveLeave = async (req, res) => {
   const {
     params: { id: leaveId },
@@ -269,6 +282,7 @@ module.exports = {
   approveLeave,
   deleteLeave,
   createLeave,
+  checkLeave,
   autoRejectLeaveRequests,
 };
 

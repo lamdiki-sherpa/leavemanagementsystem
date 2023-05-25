@@ -32,31 +32,38 @@ const AdminDashboard = ({ user }) => {
     const jwt = JSON.parse(localStorage.getItem("jwt"));
     const config = {
       headers: { Authorization: `Bearer ${jwt.token}` },
+      params: {
+        sortBy: 'leavePriority',
+        order: 'ASC',
+        AdminStatus:'Pending'
+      }
     };
     try {
-      const { data } = await Axios.get("/api/v1/admin", config);
+      const { data } = await Axios.get("/api/v1/leave",config);
       const response = JSON.stringify(data);
-      const leave = JSON.parse(response); // setLeave(leave.leaves)
-      const scoredRequests = leave.leaves.map((request) => {
-        return { ...request };
-      });
-      scoredRequests.sort((a, b) => {
-        if (a.leavePriority === b.leavePriority) {
-          return b.leaveScore - a.leaveScore;
-        }
-        return a.leavePriority - b.leavePriority;
-      });
-      setLeave(scoredRequests);
-      // setLeaveRecords(leave.leaves);
-      leave.leaves.map(function (currentValue) {
-        console.log(currentValue, "cvv");
-        if (
-          currentValue.AdminStatus == "Approved" ||
-          currentValue.AdminStatus == "Pending"
-        ) {
-          setLeaveRecords(currentValue);
-        }
-      });
+      const leave = JSON.parse(response); 
+      console.log(leave.leaves)
+      setLeave(leave.leaves)
+      // const scoredRequests = leave.leaves.map((request) => {
+      //   return { ...request };
+      // });
+      // scoredRequests.sort((a, b) => {
+      //   if (a.leavePriority === b.leavePriority) {
+      //     return b.leaveScore - a.leaveScore;
+      //   }
+      //   return a.leavePriority - b.leavePriority;
+      // });
+      // setLeave(scoredRequests);
+      // // setLeaveRecords(leave.leaves);
+      // leave.leaves.map(function (currentValue) {
+      //   console.log(currentValue, "cvv");
+      //   if (
+      //     currentValue.AdminStatus == "Approved" ||
+      //     currentValue.AdminStatus == "Pending"
+      //   ) {
+      //     setLeaveRecords(currentValue);
+      //   }
+      // });
     } catch (error) {
       if (error.response.statusText === "Unauthorized") {
         setError(error.response.data.msg);
@@ -69,15 +76,12 @@ const AdminDashboard = ({ user }) => {
 
   const leavedeclineHandler = async (id, e) => {
     const jwt = JSON.parse(localStorage.getItem("jwt"));
+    console.log(jwt)
     const config = {
       headers: { Authorization: `Bearer ${jwt.token}` },
     };
     try {
-      const { data } = await Axios.patch(
-        `/api/v1/admin/${id}`,
-        { AdminRemark: "leave is not available", AdminStatus: "Rejected" },
-        config
-      );
+      const { data } = await Axios.put(`/api/v1/leave/${id}/reject`,{},config);
       const response = JSON.stringify(data);
       console.log(response, "res");
       const leave = JSON.parse(response);
@@ -96,9 +100,8 @@ const AdminDashboard = ({ user }) => {
       headers: { Authorization: `Bearer ${jwt.token}` },
     };
     try {
-      const { data } = await Axios.patch(
-        `/api/v1/admin/${id}`,
-        { AdminRemark: "leave granted", AdminStatus: "Approved" },
+      const { data } = await Axios.put(
+        `/api/v1/leave/${id}/approve`,{},
         config
       );
       const response = JSON.stringify(data);

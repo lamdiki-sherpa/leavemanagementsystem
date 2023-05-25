@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../css/register.css";
+
 const Signin = () => {
   const navigate = useNavigate();
+  const [department,setDepartment]=useState([])
   const [inputField, setInputField] = useState({
     name: "",
     email: "",
     password: "",
     profile: "",
+    department:""
   });
   const [error, setError] = useState("");
   const inputHandler = (e) => {
@@ -25,6 +28,7 @@ const Signin = () => {
     formdata.append("name", inputField.name);
     formdata.append("email", inputField.email);
     formdata.append("password", inputField.password);
+    formdata.append("department", inputField.department);
     try {
       const { data } = await Axios.post("/api/v1/auth/register", formdata);
       const response = JSON.stringify(data);
@@ -40,6 +44,24 @@ const Signin = () => {
       console.log(error.response);
     }
   };
+  const fetchDepartment=async()=>{
+    // const jwt = JSON.parse(localStorage.getItem("jwt"));
+    // const config = {
+    //   headers: { Authorization: `Bearer ${jwt.token}` },
+    // };
+    try {
+      const {data}= await Axios.get(
+        "/api/v1/department"
+      );
+    console.log(data.departments)
+    setDepartment(data.departments)
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
+  useEffect(()=>{
+    fetchDepartment()
+  },[])
   return (
     // <div className='col-6 text-start mx-4'>
     //      <h1 className='my-3'>Registration</h1>
@@ -134,8 +156,24 @@ const Signin = () => {
               required
             />
           </div>
-
           <div class="col-sm-6 form-group">
+            <label for="password">Department</label>
+            <select
+            className="form-control"
+              name="department"
+              value={inputField.department}
+              onChange={inputHandler}
+              required
+            >
+              {department.map((dept)=>{
+               const {_id,DepartmentName}=dept
+               return <option key={_id} value={DepartmentName}>{DepartmentName}</option>
+              })
+              }
+            </select>
+          </div>
+
+          {/* <div class="col-sm-6 form-group">
             <label for="address-1">Address Line-1</label>
             <input
               type="address"
@@ -156,8 +194,8 @@ const Signin = () => {
               placeholder="Village/City Name."
               required
             />
-          </div>
-          <div class="col-sm-4 form-group">
+          </div> */}
+          {/* <div class="col-sm-4 form-group">
             <label for="State">State</label>
             <input
               type="address"
@@ -178,7 +216,7 @@ const Signin = () => {
               placeholder="Postal-Code."
               required
             />
-          </div>
+          </div> */}
           {/* <div class="col-sm-6 form-group">
             <label for="Country">Country</label>
             <select class="form-control custom-select browser-default">
@@ -484,7 +522,7 @@ const Signin = () => {
               <option value="Zimbabwe">Zimbabwe</option>
             </select>
           </div> */}
-          <div class="col-sm-6 form-group">
+          {/* <div class="col-sm-6 form-group">
             <label for="Date">Date Of Birth</label>
             <input
               type="Date"
@@ -494,7 +532,7 @@ const Signin = () => {
               placeholder=""
               required
             />
-          </div>
+          </div> */}
           <div class="col-sm-6 form-group">
             <label for="sex">Gender</label>
             <select id="sex" class="form-control browser-default custom-select">
@@ -1152,7 +1190,7 @@ const Signin = () => {
               </option>
             </select>
           </div> */}
-          <div class="col-sm-4 form-group">
+          {/* <div class="col-sm-4 form-group">
             <label for="tel">Phone</label>
             <input
               type="tel"
@@ -1162,7 +1200,7 @@ const Signin = () => {
               placeholder="Enter Your Contact Number."
               required
             />
-          </div>
+          </div> */}
 
           <div class="col-sm-12 form-group mb-0 d-flex justify-content-center items-items-center p-4">
             <button type="submit" class="btn btn-primary float-right">

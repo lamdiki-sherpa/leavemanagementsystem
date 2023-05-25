@@ -7,14 +7,18 @@ const {
   rejectLeave,
   deleteLeave,
   createLeave,
+  checkLeave
 } = require("../controller/leave");
 
 router.route("/").post(createLeave).get(getAllLeaves);
+router.route("/check").get(checkLeave)
+router.route("/:id/approve").put(approveLeave)
+
+router.route("/:id/reject").put(rejectLeave)
 router
   .route("/:id")
   .get(getLeave)
   .delete(deleteLeave)
-  .patch(approveLeave)
-  .patch(rejectLeave);
+ 
 
 module.exports = router;

@@ -12,10 +12,10 @@ const LeaveForm = () => {
     StartLeaveDate: "",
     EndLeaveDate: "",
     AdminRemark: "",
-    // AdminStatus:'pending',
     LeaveDetails: "",
+    leavePriority:""
   });
-
+  const [leaveTypes,setLeaveTypes]=useState([])
   const [token, setToken] = useState("");
   const [errors, setErrors] = useState("");
   const inputHandler = (e) => {
@@ -32,17 +32,50 @@ const LeaveForm = () => {
       const response = JSON.stringify(data);
       const leave = JSON.parse(response);
       console.log(leave);
+      setInputField({
+        LeaveType: "",
+        StartLeaveDate: "",
+        EndLeaveDate: "",
+        AdminRemark: "",
+        LeaveDetails: "",
+        leavePriority:""
+      })
     } catch (error) {
       console.log(error.response);
     }
   };
-
-  useEffect(() => {
+  const fetchLeaveType=async()=>{
+    // const jwt = JSON.parse(localStorage.getItem("jwt"));
+    // const config = {
+    //   headers: { Authorization: `Bearer ${jwt.token}` },
+    // };
+    try {
+      const {data}= await axios.get(
+        "/api/v1/leaveType"
+      );
+    console.log(data.leaveTypes)
+    setLeaveTypes(data.leaveTypes)
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
+  const checkLeave=async()=>{
     const jwt = JSON.parse(localStorage.getItem("jwt"));
-    const tokens = jwt.token;
-    console.log(tokens);
-    setToken(tokens);
-  }, setToken);
+    const config = {
+      headers: { Authorization: `Bearer ${jwt.token}` },
+    };
+  try {
+    const {data}=await axios.get("api/v1/leave/check",config)
+    console.log(data)
+  } catch (error) {
+    console.log(error.response)
+  }
+  }
+  useEffect(()=>{
+    fetchLeaveType()
+    checkLeave()
+  },[])
+
 
   return (
     <div className="container">
@@ -91,17 +124,28 @@ const LeaveForm = () => {
                       onChange={inputHandler}
                       className="rounded"
                     >
-                      <option value="Sick">Sick</option>
-                      <option value="Paternity">Paternity</option>
-                      <option value="Maternity">Maternity</option>
-                      <option value="Bereavement">Bereavement</option>
-                      <option value="Annual">Annual</option>
-                      <option value="Religious">Religious</option>
-                      <option value="Unpaid">Unpaid</option>
-                      <option value="Compensatory">Compensatory</option>
+                      {leaveTypes.map((leave)=>{
+                      const {_id,LeaveTypeName}=leave
+                      return <option key={_id} value={_id}>{LeaveTypeName}</option>
+                      })}
                     </select>
                   </div>
                 </div>
+                <div className="form-group mb-3">
+                      <label className="form-label">Leave level</label>
+                      <select
+                        type="Number"
+                        name="leavePriority"
+                        className=" form-control my-2 rounded"
+                        value={inputField.leavePriority}
+                        onChange={inputHandler}
+                        required
+                      >
+                        <option value="1">High</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Low</option>
+                      </select>
+                    </div>
                 <div className="form-group mb-3">
                   <label className="form-label">Why do you need a leave?</label>{" "}
                   <br />

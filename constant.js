@@ -1,6 +1,11 @@
 const ROLES = {
   ADMIN: "ADMIN",
+  STAFF:"STAFF"
 };
+const AdminStatus={
+  Approved:"Approved",
+  Rejected:"Rejected"
+}
 const Prority = {
   HIGH: 3,
   MEDIUM: 2,
@@ -8,5 +13,5 @@ const Prority = {
 };
 
 module.exports = {
-  ROLES,
+  ROLES,AdminStatus
 };

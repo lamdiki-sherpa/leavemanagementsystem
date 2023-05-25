@@ -29,7 +29,8 @@ const register=async(req,res)=>{
       email: req.body.email,
       password: req.body.password,
       profile: req?.file?.filename,
-      roles: ROLES.ADMIN
+      department:req.body.department,
+      roles: ROLES.STAFF
     });
     const token =user.createJWT()
     res.status(StatusCodes.CREATED).json({user,token})
