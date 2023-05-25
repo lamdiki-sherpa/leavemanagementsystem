@@ -5,7 +5,7 @@ const { UnauthenticatedError } = require("../errors");
 const { ROLES } = require("../constant");
 const authenticateUser = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(req.headers);
+  // console.log(req.headers);
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     throw new UnauthenticatedError("Authentication Invalid!No token");
   }

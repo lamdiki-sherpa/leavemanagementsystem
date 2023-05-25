@@ -27,7 +27,7 @@ const getAllLeaves = async (req, res) => {
     matchReq["createdBy"] = mongoose.Types.ObjectId(req.user.userId);
   }
   if(req.query.AdminStatus==="ALL"){
-    console.log(req.query,"18")
+    // console.log(req.query,"18")
     delete req.query.AdminStatus
     delete matchReq.AdminStatus
   }
@@ -67,7 +67,7 @@ const getAllLeaves = async (req, res) => {
       ],
     };
   }
-  console.log(matchReq);
+  // console.log(matchReq);
   const leaves = await Job.aggregate([
     {
       $match: matchReq,
@@ -127,18 +127,18 @@ const autoRejectLeaveRequests = async () => {
 
 const createLeave = async (req, res) => {
   console.log(req.user);
-  const leave= await Job.aggregate([
+  // const leave= await Job.aggregate([
 
-    {$match: {createdBy: mongoose.Types.ObjectId(req.user.userId)}},
-      { $sort: { createdAt: -1 } },
-      {$limit:1}
-    ])
-    if(leave?.[0]?.AdminStatus==="Pending"){
+  //   {$match: {createdBy: mongoose.Types.ObjectId(req.user.userId)}},
+  //     { $sort: { createdAt: -1 } },
+  //     {$limit:1}
+  //   ])
+  //   if(leave?.[0]?.AdminStatus==="Pending"){
      
-      res.status(StatusCodes.OK).json({msg:"leave pending.cannot create leave.",status:false})
-    }
+  //     res.status(StatusCodes.OK).json({msg:"leave pending.cannot create leave.",status:false})
+  //   }
 
-    console.log(leave);
+    // console.log(leave);
   req.body.createdBy = req.user.userId;
   const start = new Date(req.body.StartLeaveDate).getTime();
   const end = new Date(req.body.EndLeaveDate).getTime();
@@ -181,12 +181,12 @@ const createLeave = async (req, res) => {
     res.status(StatusCodes.OK).json(resp);
   } else {
     const remainingDays = +leaveType.LeavePerYear - +diffInDay;
-    // console.log(remainingDays);
+    console.log(remainingDays,"remainingdays");
     if (remainingDays < 0) {
       res.status(StatusCodes.BAD_REQUEST).json({ msg: "Leave days exceed" });
     }
     req.body.AvailableLeaveDay = leaveType.LeavePerYear;
-    // req.body.leaveScore = remainingDays * req.body.leavePriority;
+    req.body.leaveScore = remainingDays * req.body.leavePriority;
 
     const resp = await Job.create(req.body);
     res.status(StatusCodes.CREATED).json(resp);
@@ -200,7 +200,7 @@ const checkLeave=async(req,res)=>{
       { $sort: { createdAt: -1 } },
       {$limit:1}
     ])
-    console.log(leave);
+    // console.log(leave);
     if(leave?.[0]?.AdminStatus==="Pending"){
      
       res.status(StatusCodes.OK).json({msg:"leave pending.cannot create leave.",status:false})
