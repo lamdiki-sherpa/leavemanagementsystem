@@ -34,7 +34,6 @@ const AdminDashboard = ({ user }) => {
       headers: { Authorization: `Bearer ${jwt.token}` },
       params: {
         sortBy: 'leavePriority',
-        order: 'ASC',
         AdminStatus:'Pending'
       }
     };
@@ -43,18 +42,18 @@ const AdminDashboard = ({ user }) => {
       const response = JSON.stringify(data);
       const leave = JSON.parse(response); 
       console.log(leave.leaves)
-      setLeave(leave.leaves)
-      // const scoredRequests = leave.leaves.map((request) => {
-      //   return { ...request };
-      // });
-      // scoredRequests.sort((a, b) => {
-      //   if (a.leavePriority === b.leavePriority) {
-      //     return b.leaveScore - a.leaveScore;
-      //   }
-      //   return a.leavePriority - b.leavePriority;
-      // });
-      // setLeave(scoredRequests);
-      // // setLeaveRecords(leave.leaves);
+      // setLeave(leave.leaves)
+      const scoredRequests = leave.leaves.map((request) => {
+        return { ...request };
+      });
+      scoredRequests.sort((a, b) => {
+        if (a.leavePriority === b.leavePriority) {
+          return b.leaveScore - a.leaveScore;
+        }
+        return a.leavePriority - b.leavePriority;
+      });
+      setLeave(scoredRequests);
+      // setLeaveRecords(leave.leaves);
       // leave.leaves.map(function (currentValue) {
       //   console.log(currentValue, "cvv");
       //   if (
